@@ -1,0 +1,88 @@
+[
+        {
+            "title": "Customer instructions / Instrucciones del cliente",
+            "options": [
+                [
+                    "Mainlabel only / Solo marca",
+                    "Main label W / Marca con talla"
+                ]
+            ]
+        },
+        {
+           "title":"Size ticket / Talla por separado",
+           "options":[
+                [
+                    "Customer provide / Cliente provee",
+                    "Blue Star provide / Blue Star provee"
+                ],
+                [
+                    "Middle placement / Preparado",
+                    "On the side / A un lado"
+                ],
+                [
+                    "Care label / Etiqueta de contenidos"
+                ]
+           ]
+        },
+        {
+            "title": "Hang tag / Carton",
+            "options":[
+                [
+                    "String / Liston",
+                    "Plastic / Plastico",
+                    "Metal"
+                ]
+            ]
+        },
+        {
+            "title": "Bagging / Embolsar",
+            "options":[
+                [
+                    "Customer provide bags / Cliente provee bolsas",
+                    "Blue Star provide bags / Blue Star provee bolsas"
+                ],
+                [
+                    "By each Pc / Individual",
+                    "Brake down 6 by pack / Paquete de 6 piezas"
+                ]
+            ]
+        },
+        {
+            "title": "Hangers / Ganchos",
+            "options":[
+                [
+                    "Customer provide hanger / Cliente provee ganchos",
+                    "Blue Star provide hanger / Blue Star provee ganchos"
+                ]
+            ]
+        },
+        {
+            "title": "Sticker size label on bag / Sticker de talla en la bolsa",
+            "options":[
+                [
+                    "Customer provide size sticker label / Cliente provee sticker de talla",
+                    "Blue Star provide size sticker label / Blue Star provee sticker de talla"
+
+                ]
+            ]
+        },
+        {
+            "title": "Packing / Empaque (Some fees apply)",
+            "options":[
+                [
+                    "Repacking / Reempacado",
+                    "Same box / Misma caja",
+                    "Full tape boxes"
+                ]
+            ]
+        },
+        {
+            "title": "Shippingmethod / Opciones de envio (Some fees apply)",
+            "options":[
+                [
+                    "Loose Boxes / Cajas sueltas",
+                    "Pallets"                
+                ]
+            ]
+        }
+]

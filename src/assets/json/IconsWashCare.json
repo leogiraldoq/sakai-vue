@@ -1,0 +1,467 @@
+[
+        {
+            "content":"!",
+            "description":"Machine Wash, Normal",
+            "check": false
+        },
+        {
+            "content": "\"",
+            "description":"Machine Wash, Cold",
+            "check": false
+        },
+        {
+            "content":"#",
+            "description":"Machine Wash, Cold",
+            "check": false
+        },
+        {
+            "content":"$",
+            "description":"Machine Wash, Warm",
+            "check": false
+        },
+        {
+            "content":"%",
+            "description":"Machine Wash, Warm",
+            "check": false
+        },
+        {
+            "content":"&",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":"'",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":"(",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":")",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":"*",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":"+",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":",",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":"-",
+            "description":"Machine Wash, Hot",
+            "check": false
+        },
+        {
+            "content":".",
+            "description":"Machine Wash Permanent Press",
+            "check": false
+        },
+        {
+            "content":"/",
+            "description":"Machine Wash, Cold Permanent Press",
+            "check": false
+        },
+        {
+            "content":"0",
+            "description":"Machine Wash, Cold Permanent Press",
+            "check": false
+        },
+        {
+            "content":"1",
+            "description":"Machine Wash, Warm Permanent Press",
+            "check": false
+        },
+        {
+            "content":"2",
+            "description":"Machine Wash, Warm Permanent Press",
+            "check": false
+        },
+        {
+            "content":"3",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":"4",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":"5",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":"6",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":"7",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":"8",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":"9",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":":",
+            "description":"Machine Wash, Hot Permanent Press",
+            "check": false
+        },
+        {
+            "content":";",
+            "description":"Machine Wash, Gentle",
+            "check": false
+        },
+        {
+            "content":"<",
+            "description":"Machine Wash, Cold, Gentle",
+            "check": false
+        },
+        {
+            "content":"=",
+            "description":"Machine Wash, Cold, Gentle",
+            "check": false
+        },
+        {
+            "content":">",
+            "description":"Machine Wash, Warm, Gentle",
+            "check": false
+        },
+        {
+            "content":"?",
+            "description":"Machine Wash, Warm, Gentle",
+            "check": false
+        },
+        {
+            "content":"@",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"A",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"B",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"C",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"D",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"E",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"F",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"G",
+            "description":"Machine Wash, Hot, Gentle",
+            "check": false
+        },
+        {
+            "content":"H",
+            "description":"Hand Wash, Normal",
+            "check": false
+        },
+        {
+            "content":"I",
+            "description":"Hand Wash, Cold",
+            "check": false
+        },
+        {
+            "content":"J",
+            "description":"Hand Wash, Cold",
+            "check": false
+        },
+        {
+            "content":"K",
+            "description":"Hand Wash, Warm",
+            "check": false
+        },
+        {
+            "content":"L",
+            "description":"Hand Wash, Warm",
+            "check": false
+        },
+        {
+            "content":"M",
+            "description":"Do Not Wash",
+            "check": false
+        },
+        {
+            "content":"N",
+            "description":"Bleach When Needed",
+            "check": false
+        },
+        {
+            "content":"O",
+            "description":"Non- Chlorine Bleach When Needed",
+            "check": false
+        },
+        {
+            "content":"P",
+            "description":"Do Not Bleach",
+            "check": false
+        },
+        {
+            "content":"Q",
+            "description":"Tumble Dry Normal",
+            "check": false
+        },
+        {
+            "content":"R",
+            "description":"Tumble Dry, Normal, Low Heat",
+            "check": false
+        },
+        {
+            "content":"S",
+            "description":"Tumble DaddRemoveIconry, Normal, Medium Heat",
+            "check": false
+        },
+        {
+            "content":"T",
+            "description":"Tumble Dry, Normal, High Heat",
+            "check": false
+        },
+        {
+            "content":"U",
+            "description":"Tumble Dry, Normal, No Heat",
+            "check": false
+        },
+        {
+            "content":"V",
+            "description":"Tumble Dry, Permanent Press",
+            "check": false
+        },
+        {
+            "content":"W",
+            "description":"Tumble Dry, Permanent Press, Low Heat",
+            "check": false
+        },
+        {
+            "content":"X",
+            "description":"Tumble Dry, Permanent Press, Medium Heat",
+            "check": false
+        },
+        {
+            "content":"Y",
+            "description":"Tumble Dry, Permanent Press, High Heat",
+            "check": false
+        },
+        {
+            "content":"Z",
+            "description":"Tumble dry, Gentle",
+            "check": false
+        },
+        {
+            "content":"[",
+            "description":"Tumble dry, Gentle, Low Heat",
+            "check": false
+        },
+        {
+            "content":"\\",
+            "description":"Tumble dry, Gentle, Medium Heat",
+            "check": false
+        },
+        {
+            "content":"]",
+            "description":"Tumble dry, Gentle, High Heat",
+            "check": false
+        },
+        {
+            "content":"^",
+            "description":"Tumble dry, Gentle, No Heat",
+            "check": false
+        },
+        {
+            "content":"_",
+            "description":"Do Not Tumble Dry",
+            "check": false
+        },
+        {
+            "content":"`",
+            "description":"Do Not Dry",
+            "check": false
+        },
+        {
+            "content":"a",
+            "description":"Line Dry",
+            "check": false
+        },
+        {
+            "content":"b",
+            "description":"Line Dry In Shade",
+            "check": false
+        },
+        {
+            "content":"c",
+            "description":"Drip Dry",
+            "check": false
+        },
+        {
+            "content":"d",
+            "description":"Drip Dry In Shade",
+            "check": false
+        },
+        {
+            "content":"e",
+            "description":"Dry Flat",
+            "check": false
+        },
+        {
+            "content":"f",
+            "description":"Dry Flat In Shade",
+            "check": false
+        },
+        {
+            "content":"g",
+            "description":"Do Not Wring",
+            "check": false
+        },
+        {
+            "content":"h",
+            "description":"Iron, Any Temperature, Steam or Dry",
+            "check": false
+        },
+        {
+            "content":"i",
+            "description":"Iron, Low Heat",
+            "check": false
+        },
+        {
+            "content":"j",
+            "description":"Iron, Medium Heat",
+            "check": false
+        },
+        {
+            "content":"k",
+            "description":"Iron, High Heat",
+            "check": false
+        },
+        {
+            "content":"l",
+            "description":"Do Not Steam",
+            "check": false
+        },
+        {
+            "content":"m",
+            "description":"Iron, Low Heat, No Steam",
+            "check": false
+        },
+        {
+            "content":"n",
+            "description":"Iron, Medium Heat, No Steam",
+            "check": false
+        },
+        {
+            "content":"o",
+            "description":"Iron, High Heat, No Steam",
+            "check": false
+        },
+        {
+            "content":"p",
+            "description":"Do Not Iron",
+            "check": false
+        },
+        {
+            "content":"q",
+            "description":"Dry Clean",
+            "check": false
+        },
+        {
+            "content":"r",
+            "description":"Dry Clean, Any Solvent",
+            "check": false
+        },
+        {
+            "content":"s",
+            "description":"Dry Clean, Petroleum Solvent Only",
+            "check": false
+        },
+        {
+            "content":"t",
+            "description":"Dry Clean, Any Solvent, Except Trichloroethylene",
+            "check": false
+        },
+        {
+            "content":"u",
+            "description":"Dry Clean, Low Heat",
+            "check": false
+        },
+        {
+            "content":"v",
+            "description":"Dry Clean, No Steam",
+            "check": false
+        },
+        {
+            "content":"w",
+            "description":"Dry Clean, Reduced Moisture",
+            "check": false
+        },
+        {
+            "content":"x",
+            "description":"Dry Clean, Short Cycle",
+            "check": false
+        },
+        {
+            "content":"y",
+            "description":"Dry Clean, Any Solvent, Low Heat",
+            "check": false
+        },
+        {
+            "content":"z",
+            "description":"Dry Clean, Any Solvent, No Steam",
+            "check": false
+        },
+        {
+            "content":"{",
+            "description":"Dry Clean, Any Solvent, Reduced Moisture",
+            "check": false
+        },
+        {
+            "content":"|",
+            "description":"Dry Clean, Any Solvent, Short Cycle",
+            "check": false
+        },
+        {
+            "content":"}",
+            "description":"Do Not Dry Clean",
+            "check": false
+        }
+    ]
