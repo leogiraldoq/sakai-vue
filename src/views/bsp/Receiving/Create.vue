@@ -359,7 +359,7 @@
                             <Button icon="pi pi-plus" label="Add receive box" @click="addReceiveBox" size="small" severity="help" />
                         </div>
                         <div class="col-12 mt-3">
-                            <video id="video" v-show="showVideo">Video stream not available.</video>
+                            <video id="video" v-show="showVideo" style="width: 100%">Video stream not available.</video>
                             <canvas id="canvas" v-show="showCanvas"></canvas>
                             <Button id="startbutton" icon="pi pi-camera" label="Take photo"  severity="success" class="w-full"/>
                         </div>

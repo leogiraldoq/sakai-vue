@@ -44,8 +44,8 @@ async function submitLogin() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                "username":this.formLogin.username,
-                "password":this.formLogin.password  
+                "username":formLogin.username,
+                "password":formLogin.password  
             })
         });
         let dataReturn = await response.json();
