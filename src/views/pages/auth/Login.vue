@@ -38,6 +38,7 @@ async function submitLogin() {
     }
     
     try{
+        event.preventDefault()
         const response = await fetch(import.meta.env.VITE_API_URL+"/login",{
             method: "POST",
             headers: {

@@ -4,6 +4,7 @@
     import { helpers, required, minLength, maxLength, numeric } from '@vuelidate/validators';
     import { FilterMatchMode, FilterService } from 'primevue/api';
     import moment from 'moment';
+    import printJS from 'print-js';
 
     import ShippersService from '@/service/ShippersService';
     import CustomerService from '@/service/CustomerService';
@@ -121,7 +122,6 @@
                 boxesItems.value = [...boxesOptions.value];
             }else{
                 boxesItems.value = boxesOptions.value.filter((box) =>{
-                    console.log(box)
                    return box.describe.toLowerCase().startsWith(event.query.toLowerCase()); 
                 });
             }
@@ -153,6 +153,7 @@
             let resReceive = await receiveService.create(formReceive);
             createReceive = resReceive.data.ticket;
             receiveListPerDate.value.push(resReceive.data.resume);
+            //await printJS({printable:createReceive.stickers, type:'pdf',base64:true});
             await messageService.successMessageSimple(resReceive.message,"Ok!");
             Object.assign(formReceive,{
                 user: null,
@@ -178,6 +179,7 @@
             messageProcess.value=null;
 
         } catch (err) {
+            console.log(err)
             messageService.errorMessage(err);
             loadingCreate.value = false;
         }

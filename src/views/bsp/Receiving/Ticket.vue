@@ -16,6 +16,11 @@
         receiveId: ticket.id_receive,
         ticket: null
     });
+    const pdfPrintDialog = ref(false);
+    const pdfs = reactive({
+        ticket: null,
+        stickers: null
+    });
     onMounted( async ()=>{
         await domtoimage.toPng(ticketToPrint.value).then((imageData) => {
             const pdf = new jsPDF("p","in",[4,11]);
@@ -27,7 +32,7 @@
                 saveTicket();
             }
             reader.readAsDataURL(pdfOut)
-            pdf.save("ticket.pdf");
+            console.log(formTicket.ticket)
         });
         
     });
@@ -41,12 +46,43 @@
         try {
             const receiveService = new ReceiveService();
             const resTicket = await receiveService.upserTicket(formTicket);
-            console.log(resTicket)
+            pdfs.ticket = resTicket.data.ticket;
+            pdfs.stickers = 'data:application/pdf;base64,'+resTicket.data.stickers;
+            console.log(pdfs)
+            pdfPrintDialog.value = true;
         } catch (e) {
             console.log(e)
             messageService.errorMessage(e)
         }
-
+    }
+    
+    function convertBlobPdf(base64File){
+        console.log(base64File)
+        const byteCharacters = atob(base64File);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++){
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        return new Blob([byteArray],{ type: 'application/pdf'});
+    }
+    
+    async function printTicket(){
+        var printIframeTicket = document.getElementById('pdfTicketFrame');
+        if(printIframeTicket){
+           await printIframeTicket.contentWindow.print();
+        } else {
+            console.log(printIframeTicket);
+        }
+    }
+    
+    async function printStickers(){
+        let printIframeStickers = document.getElementById('pdfStickersFrame');
+        if(printIframeStickers){
+            await printIframeStickers.contentWindow.print();
+        } else {
+            console.log(printIframeStickers);
+        }
     }
 </script>
 
@@ -83,6 +119,20 @@
             <p class="text-sm"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
         </div>
     </div>
+    <Dialog :visible="pdfPrintDialog" modal header="Print" :style="{ width: '25rem' }">
+        <div class="grid">
+            <div class="col-6">
+                <iframe :src="pdfs.ticket" id="pdfTicketFrame" width="100%"></iframe>
+            </div>
+            <div class="col-6">
+                <iframe :src="pdfs.stickers" id="pdfStickersFrame" width="100%"></iframe>
+            </div>
+        </div>
+        <template #footer>
+            <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()"/>
+            <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" autofocus />
+        </template>
+    </Dialog>
 </template>
 
 <style scoped>
