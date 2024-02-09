@@ -31,8 +31,9 @@
                 formTicket.ticket = reader.result
                 saveTicket();
             }
-            reader.readAsDataURL(pdfOut)
-            console.log(formTicket.ticket)
+            reader.readAsDataURL(pdfOut);
+            pdfs.ticket = reader.result
+            pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
         });
         
     });
@@ -46,12 +47,9 @@
         try {
             const receiveService = new ReceiveService();
             const resTicket = await receiveService.upserTicket(formTicket);
-            pdfs.ticket = resTicket.data.ticket;
-            pdfs.stickers = 'data:application/pdf;base64,'+resTicket.data.stickers;
             console.log(pdfs)
             pdfPrintDialog.value = true;
         } catch (e) {
-            console.log(e)
             messageService.errorMessage(e)
         }
     }

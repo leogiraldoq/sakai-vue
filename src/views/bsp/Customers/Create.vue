@@ -64,7 +64,7 @@
         if(formCreateCustomer.pickUpCompanyId === null || formCreateCustomer.pickUpCompanyId === ''){
             showUpsAccount.value = false;
         } else {
-            if ((pickUpOptions.find((o) => o.id_pick_up_company === formCreateCustomer.pickUpCompanyId).name === "UPS")){
+            if ((pickUpOptions.value.find((o) => o.id_pick_up_company === formCreateCustomer.pickUpCompanyId).name === "UPS")){
                 showUpsAccount.value = true;
             }else{
                 showUpsAccount.value = false;
@@ -100,6 +100,7 @@
             phone: '',
             email:''        
         });
+        console.log(formCreateCustomer)
     }
     
     function removeFormBoutiqueConatct(cBoutique,cContact){
