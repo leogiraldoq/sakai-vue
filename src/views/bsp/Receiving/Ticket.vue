@@ -119,7 +119,7 @@
             <p class="text-sm"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
         </div>
     </div>
-    <Dialog :visible="pdfPrintDialog" modal header="Print" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="pdfPrintDialog" modal header="Print" :style="{ width: '25rem' }">
         <div class="grid">
             <div class="col-6">
                 <iframe :src="pdfs.ticket" id="pdfTicketFrame" width="100%"></iframe>

@@ -51,10 +51,10 @@
             if(!validationPickUpCreate){
                 return;
             }
-            let newPickUpCompany = await pickupcompanyservice.create(this.formPickUpCompanyCreate);
+            let newPickUpCompany = await pickupcompanyservice.create(formPickUpCompanyCreate);
             await messageservice.successMessageSimple(newPickUpCompany.message,"Ok!");
             pickUpCompany.value.push(newPickUpCompany.data);
-            Object.assign(this.formPickUpCompanyCreate,{
+            Object.assign(formPickUpCompanyCreate,{
                name: '' 
             });
         }catch(e){
