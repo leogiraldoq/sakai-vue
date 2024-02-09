@@ -44,7 +44,7 @@
             if(!validationModule){
                 return;
             }
-            let newModule = await profilemodulesservice.createModule(this.formModuleCreate);
+            let newModule = await profilemodulesservice.createModule(formModuleCreate);
             await messageservice.successMessageSimple(newModule.message,"OK");
             formProfileCreate.modulesPermissions.push({
                 id_module: newModule.data.id_module,
@@ -54,7 +54,7 @@
                 update: false,
                 erase: false,
             });
-            Object.assign(this.formModuleCreate,{
+            Object.assign(formModuleCreate,{
                 module_name: '',
                 description: null,                
             });
@@ -83,7 +83,7 @@
             }
             let newProfile = await profilemodulesservice.createProfile(formProfileCreate);
             await messageservice.successMessageSimple(newProfile.message,"OK");
-            Object.assign(this.formProfileCreate,{
+            Object.assign(formProfileCreate,{
                 name: '',
                 description: '',
                 modulesPermissions: [

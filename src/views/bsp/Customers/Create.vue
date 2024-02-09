@@ -61,13 +61,13 @@
     const valCosCreate$ = useVuelidate(rulesCustomerCreate,formCreateCustomer);
     
     function onChangeVerify(){
-        if(this.formCreateCustomer.pickUpCompanyId === null || this.formCreateCustomer.pickUpCompanyId === ''){
-            this.showUpsAccount = false;
+        if(formCreateCustomer.pickUpCompanyId === null || formCreateCustomer.pickUpCompanyId === ''){
+            showUpsAccount.value = false;
         } else {
-            if ((this.pickUpOptions.find((o) => o.id_pick_up_company === this.formCreateCustomer.pickUpCompanyId).name === "UPS")){
-                this.showUpsAccount = true;
+            if ((pickUpOptions.find((o) => o.id_pick_up_company === formCreateCustomer.pickUpCompanyId).name === "UPS")){
+                showUpsAccount.value = true;
             }else{
-                this.showUpsAccount = false;
+                showUpsAccount.value = false;
             }
         }    
     }
@@ -113,9 +113,9 @@
         try{
             const validationCustomer = await valCosCreate$.value.$validate();
             const customerservice = new CustomerService();
-            let customerCreate = await customerservice.create(this.formCreateCustomer);
-            await messageService.successMessage(this.router,customerCreate.message,'customers',"Create other customert","Go to customer list");
-            Object.assign(this.formCreateCustomer,{
+            let customerCreate = await customerservice.create(formCreateCustomer);
+            await messageService.successMessage(router,customerCreate.message,'customers',"Create other customert","Go to customer list");
+            Object.assign(formCreateCustomer,{
                 name: '',
                 pickUpCompanyId: null,
                 upsNumberAccount:'',

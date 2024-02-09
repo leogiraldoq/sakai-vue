@@ -51,29 +51,29 @@ const v$ = useVuelidate(rules,formCreateEmployee);
 const loadingBtnCreateEmployee = ref(false);
 
 function showUsername(){
-    if(this.formCreateEmployee.email == ''){
+    if(formCreateEmployee.email == ''){
         toast.add({ severity: 'error', summary: 'Error', detail: 'Please fill up the employee email first'});
         return;
     }
-    const emailSplited = this.formCreateEmployee.email.split('@');
-    this.formCreateEmployee.username = emailSplited[0];
+    const emailSplited = formCreateEmployee.email.split('@');
+    formCreateEmployee.username = emailSplited[0];
     return;
 }
 
 async function createEmployee(){
     const messageService = new MessageService();
-    this.loadingBtnCreateEmployee = true;
+    loadingBtnCreateEmployee.value = true;
     try{
         const validation = await v$.value.$validate();
         if(!validation){
-            this.loadingBtnCreateEmployee = false;
+            loadingBtnCreateEmployee.value = false;
             return;
         }
-        this.formCreateEmployee.birth = moment(this.formCreateEmployee.birth).format('YYYY-MM-DD');
+        formCreateEmployee.birth = moment(formCreateEmployee.birth).format('YYYY-MM-DD');
         const employeesService = new EmployeesService(messageService);
-        let employeeCreate = await employeesService.createEmployee(this.formCreateEmployee);
-        await messageService.successMessage(this.router,employeeCreate.message,'employees',"Create other employee","Go to employees list");
-        Object.assign(this.formCreateEmployee,{
+        let employeeCreate = await employeesService.createEmployee(formCreateEmployee);
+        await messageService.successMessage(router,employeeCreate.message,'employees',"Create other employee","Go to employees list");
+        Object.assign(formCreateEmployee,{
             names: '',
             last_names: '',
             phone: '',
@@ -88,10 +88,10 @@ async function createEmployee(){
             profile: null
         });
         v$.value.$reset();
-        this.loadingBtnCreateEmployee = false;
+        loadingBtnCreateEmployee.value = false;
     } catch(err){
         messageService.errorMessage(err);
-        this.loadingBtnCreateEmployee = false;
+        loadingBtnCreateEmployee.value = false;
     }
 }
 </script>
