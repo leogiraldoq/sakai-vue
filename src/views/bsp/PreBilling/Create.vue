@@ -120,56 +120,56 @@
                         </transition-group>
                     </div>
                     <div class="p-fluid formgrid grid p-0" v-if="showResultQr">
-                        <div class="col-12 md:col-2">
+                        <div class="col-12 md:col-4">
                             <h5>General Info</h5>
                         </div>
-                        <div class="field col-12 md:col-3">
+                        <div class="field col-12 md:col-4">
                             <label>Received at:</label>
-                            <InputText size="small" disabled v-model="qrRead.received_date"/>
+                            <InputText size="large" disabled v-model="qrRead.received_date"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Follow Number:</label>
-                            <InputText size="small" disabled v-model="qrRead.follow_number"/>
+                            <InputText size="large" disabled v-model="qrRead.follow_number"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Received by:</label>
-                            <InputText size="small" disabled v-model="qrRead.receibed_by"/>
+                            <InputText size="large" disabled v-model="qrRead.receibed_by"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Customer:</label>
-                            <InputText size="small" disabled v-model="qrRead.customer"/>
+                            <InputText size="large" disabled v-model="qrRead.customer"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Boutique:</label>
-                            <InputText size="small" disabled v-model="qrRead.boutique"/>
+                            <InputText size="large" disabled v-model="qrRead.boutique"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Store:</label>
-                            <InputText size="small" disabled v-model="qrRead.store"/>
+                            <InputText size="large" disabled v-model="qrRead.store"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Process:</label>
-                            <InputText size="small" disabled v-model="qrRead.process"/>
+                            <InputText size="large" disabled v-model="qrRead.process"/>
                         </div>
                         <Divider/>
-                        <div class="align-content-center col-12 md:col-1">
+                        <div class="align-content-center col-12 md:col-3">
                             <h5>Boxes</h5>
                         </div>
                         <div class="field col-12 md:col-2">
                             <label>Total:</label>
-                            <InputText size="small" disabled v-model="qrRead.box_quantity"/>
+                            <InputText size="large" disabled v-model="qrRead.box_quantity"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Type:</label>
-                            <InputText size="small" disabled v-model="qrRead.box_type"/>
+                            <InputText size="large" disabled v-model="qrRead.box_type"/>
                         </div>
                         <div class="field col-12 md:col-3">
                             <label>Dimension:</label>
-                            <InputText size="small" disabled v-model="qrRead.box_dimensions"/>
+                            <InputText size="large" disabled v-model="qrRead.box_dimensions"/>
                         </div>
                         <div class="field col-12 md:col-2">
                             <label>Weight:</label>
-                            <InputText size="small" disabled v-model="qrRead.box_weight"/>
+                            <InputText size="large" disabled v-model="qrRead.box_weight"/>
                         </div>
                         <Divider />
                         <div class="col-12">

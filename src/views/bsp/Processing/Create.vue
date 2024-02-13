@@ -162,41 +162,45 @@
                         <div class="col-12">
                             <h5>General Information</h5>
                             <div class="p-fluid formgrid grid">
-                                <div class="field col-12 md:col-4">
-                                    <label for="idCustomer">Customer:</label>
-                                    <InputText v-model="qrRead.customer" id="idCustomer" disabled size="small"/>
+                                <div class="col-12 md:col-6">
+                                    <div class="field col-12">
+                                        <label for="idCustomer">Customer:</label>
+                                        <InputText v-model="qrRead.customer" id="idCustomer" disabled size="large"`/>
+                                    </div>
+                                    <div class="field col-12">
+                                        <label>Boutique:</label>
+                                        <InputText v-model="qrRead.boutique" disabled size="small"/>
+                                    </div>
+                                    <div class="field col-12">
+                                        <label>Store:</label>
+                                        <InputText v-model="qrRead.store" disabled size="small"/>                                
+                                    </div>
+                                    <div class="field col-12">
+                                        <label>Invoice Number:</label>
+                                        <InputText v-model="qrRead.invoiceNum" disabled size="small"/>                                
+                                    </div>
+                                    <div class="field col-12">
+                                        <label>Total pieces:</label>
+                                        <InputText v-model="qrRead.total" disabled size="small"/>                                
+                                    </div>
                                 </div>
-                                <div class="field col-12 md:col-4">
-                                    <label>Boutique:</label>
-                                    <InputText v-model="qrRead.boutique" disabled size="small"/>
-                                </div>
-                                <div class="field col-12 md:col-4">
-                                    <label>Store:</label>
-                                    <InputText v-model="qrRead.store" disabled size="small"/>                                
-                                </div>
-                                <div class="field col-12 md:col-2">
-                                    <label>Invoice Number:</label>
-                                    <InputText v-model="qrRead.invoiceNum" disabled size="small"/>                                
-                                </div>
-                                <div class="field col-12 md:col-2">
-                                    <label>Total pieces:</label>
-                                    <InputText v-model="qrRead.total" disabled size="small"/>                                
-                                </div>
-                                <div class="field col-12 md:col-2">
-                                    <label id="inpQntyLabels">Labels you have:</label>
-                                    <InputNumber v-model="qrRead.labels" id="inpQntyLabels" size="small"/>
-                                </div>
-                                <div class="field col-12 md:col-6" v-if="qrRead.instructions !== null">
-                                    <label>Sample:</label><br/>
-                                    <Image :src="qrRead.instructions.sampleImage" width="100%" preview/>
-                                    <Button icon="pi pi-eye" label="See instructions" severity="warning" @click="showInstructions = true" size="small" class="w-full" />
+                                <div class="col-6">
+                                    <div class="field col-12">
+                                        <label id="inpQntyLabels">Labels you have:</label>
+                                        <InputNumber v-model="qrRead.labels" id="inpQntyLabels" size="small"/>
+                                    </div>
+                                    <div class="field col-12" v-if="qrRead.instructions !== null">
+                                        <label>Sample:</label><br/>
+                                        <Image :src="qrRead.instructions.sampleImage" width="100%" preview/>
+                                        <Button icon="pi pi-eye" label="See instructions" severity="warning" @click="showInstructions = true" size="small" class="w-full" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <Divider />
                         <div class="col-12 grid">
                             <div class='col-12 md:col-6'>
-                                <h5>Processing</h5>
+                                <h5>Processing by <b>{{qrRead.whoami}}</b></h5>
                             </div>
                             <div class="col-12 md:col-6">
                                 <div class="flex align-content-center">

@@ -33,7 +33,8 @@
                     {
                         contact_name:'',
                         phone: '',
-                        email:''
+                        email:'',
+
                     }
                 ]
             }
@@ -93,6 +94,10 @@
         if( formCreateCustomer.boutiques.length > 1 ){
             formCreateCustomer.boutiques.splice(cBoutique,1);
         }
+    }
+    
+    function sameAddress(numBoutique){
+        formCreateCustomer.boutiques[numBoutique].final_destination = formCreateCustomer.boutiques[numBoutique].address;
     }
     
     function addFormBoutiqueContact(cContact){
@@ -235,7 +240,7 @@
                                     />                                                
                                 </div>
                                 <div class="field col-12">
-                                    <label>Final destination:</label>
+                                    <label>Final destination:</label> <Tag class="mr-2 cursor-pointer" severity="warning" @click="sameAddress(cB)">Same address</Tag>
                                     <InputText  
                                         id=""
                                         type="text" 
