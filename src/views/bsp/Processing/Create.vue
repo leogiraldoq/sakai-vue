@@ -165,29 +165,29 @@
                                 <div class="col-12 md:col-6">
                                     <div class="field col-12">
                                         <label for="idCustomer">Customer:</label>
-                                        <InputText v-model="qrRead.customer" id="idCustomer" disabled size="large"`/>
+                                        <InputText v-model="qrRead.customer" id="idCustomer" disabled size="large"/>
                                     </div>
                                     <div class="field col-12">
                                         <label>Boutique:</label>
-                                        <InputText v-model="qrRead.boutique" disabled size="small"/>
+                                        <InputText v-model="qrRead.boutique" disabled size="large"/>
                                     </div>
                                     <div class="field col-12">
                                         <label>Store:</label>
-                                        <InputText v-model="qrRead.store" disabled size="small"/>                                
+                                        <InputText v-model="qrRead.store" disabled size="large"/>                                
                                     </div>
                                     <div class="field col-12">
                                         <label>Invoice Number:</label>
-                                        <InputText v-model="qrRead.invoiceNum" disabled size="small"/>                                
+                                        <InputText v-model="qrRead.invoiceNum" disabled size="large"/>                                
                                     </div>
                                     <div class="field col-12">
                                         <label>Total pieces:</label>
-                                        <InputText v-model="qrRead.total" disabled size="small"/>                                
+                                        <InputText v-model="qrRead.total" disabled size="large"/>                                
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="field col-12">
                                         <label id="inpQntyLabels">Labels you have:</label>
-                                        <InputNumber v-model="qrRead.labels" id="inpQntyLabels" size="small"/>
+                                        <InputNumber v-model="qrRead.labels" id="inpQntyLabels" size="large"/>
                                     </div>
                                     <div class="field col-12" v-if="qrRead.instructions !== null">
                                         <label>Sample:</label><br/>
@@ -200,7 +200,7 @@
                         <Divider />
                         <div class="col-12 grid">
                             <div class='col-12 md:col-6'>
-                                <h5>Processing by <b>{{qrRead.whoami}}</b></h5>
+                                <h5>Processing by <b>{{ qrRead.whoami }}</b></h5>
                             </div>
                             <div class="col-12 md:col-6">
                                 <div class="flex align-content-center">
