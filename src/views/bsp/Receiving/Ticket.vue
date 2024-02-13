@@ -2,7 +2,6 @@
     import { ref, reactive, onMounted } from 'vue';
     import moment from 'moment';
     
-    import printJS from 'print-js';
     import { jsPDF } from "jspdf";
     import domtoimage from "dom-to-image";
     import ReceiveService from '@/service/ReceiveService';
@@ -33,9 +32,6 @@
             }
             reader.readAsDataURL(pdfOut);
         });
-        pdfs.ticket = formTicket.ticket
-        pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
-
     });
     
     function parseDate(date){
@@ -47,6 +43,8 @@
         try {
             const receiveService = new ReceiveService();
             const resTicket = await receiveService.upserTicket(formTicket);
+            pdfs.ticket = formTicket.ticket
+            pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
             pdfPrintDialog.value = true;
         } catch (e) {
             messageService.errorMessage(e)
@@ -54,7 +52,6 @@
     }
     
     function convertBlobPdf(base64File){
-        console.log(base64File)
         const byteCharacters = atob(base64File);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++){
@@ -116,7 +113,7 @@
             <p class="text-sm"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
         </div>
     </div>
-    <Dialog v-model:visible="pdfPrintDialog" modal header="Print" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="pdfPrintDialog" modal header="Print" :style="{ width: '70rem' }">
         <div class="grid">
             <div class="col-6">
                 <iframe :src="pdfs.ticket" id="pdfTicketFrame" width="100%"></iframe>
@@ -126,8 +123,14 @@
             </div>
         </div>
         <template #footer>
-            <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()"/>
-            <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" autofocus />
+            <div class="grid">
+                <div class="col-6">
+                    <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()" autofocus class="w-full"/>
+                </div>
+                <div class="col-6">            
+                    <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" autofocus class="w-full"/>
+                </div>
+            </div>                    
         </template>
     </Dialog>
 </template>
