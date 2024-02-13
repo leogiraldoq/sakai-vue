@@ -4,7 +4,6 @@
     import { helpers, required, minLength, maxLength, numeric } from '@vuelidate/validators';
     import { FilterMatchMode, FilterService } from 'primevue/api';
     import moment from 'moment';
-    import printJS from 'print-js';
 
     import ShippersService from '@/service/ShippersService';
     import CustomerService from '@/service/CustomerService';
