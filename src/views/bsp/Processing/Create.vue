@@ -255,7 +255,7 @@
             </Card>
         </div>
     </div>
-    <Dialog v-model:visible="showCamera" modal header="Camera" position="bottom" :style="{ width: '30vw' }">
+    <Dialog v-model:visible="showCamera" modal header="Camera" position="bottom" :style="{ width: '70vw' }">
         <StreamBarcodeReader @decode="onDecodeBspQr"></StreamBarcodeReader>
     </Dialog>
 

@@ -198,7 +198,7 @@
         </div>
         
     </div>
-    <Dialog v-model:visible="showCamera" modal header="Camera" position="bottom" :style="{ width: '30vw' }" :draggable="false">
+    <Dialog v-model:visible="showCamera" modal header="Camera" position="bottom" :style="{ width: '70vw' }" :draggable="false">
         <StreamBarcodeReader @decode="onDecodeBspQr"></StreamBarcodeReader>
     </Dialog>
 </template>
