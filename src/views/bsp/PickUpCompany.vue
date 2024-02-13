@@ -57,6 +57,7 @@
             Object.assign(formPickUpCompanyCreate,{
                name: '' 
             });
+            vPickUpCreate$.value.$reset();
         }catch(e){
             messageservice.errorMessage(e);
         }

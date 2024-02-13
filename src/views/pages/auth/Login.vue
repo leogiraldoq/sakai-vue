@@ -52,7 +52,7 @@ async function submitLogin() {
         let dataReturn = await response.json();
         if(dataReturn.access_token){
             localStorage.setItem('token',dataReturn.access_token);
-            router.push({name: 'dashboard'});
+            router.push({name: dataReturn.route});
         }else{
             message.value = [
                 { severity: 'error', content: dataReturn.error, id: 1}
@@ -64,6 +64,10 @@ async function submitLogin() {
         ];
     }
     
+}
+
+function redirectForgotPassword(){
+    router.push({name: 'forgot-password'});
 }
 
 </script>
@@ -114,7 +118,7 @@ async function submitLogin() {
                             
                             <div class="flex align-items-center justify-content-between mt-5 mb-3 gap-5">
                                 <div class="flex align-items-center text-center">
-                                    <a class="font-medium no-underline text-center cursor-pointer" style="color: var(--primary-color)">Forgot password?</a>                            
+                                    <a class="font-medium no-underline text-center cursor-pointer" style="color: var(--primary-color)" @click="redirectForgotPassword()">Forgot password?</a>                            
                                 </div>    
                             </div>
                             <Button type="submit" label="Sign In" class="w-full p-3 text-xl" @click.prevent="submitLogin()"></Button>

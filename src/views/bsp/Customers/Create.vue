@@ -11,6 +11,7 @@
     const router = useRouter();
     const pickUpOptions = ref([]);
     const showUpsAccount = ref(false);
+    const countIn = ref(0);
     
     onMounted( async ()=> {
         const pickupcompanyservice = new PickUpCompaniesService();
@@ -95,12 +96,13 @@
     }
     
     function addFormBoutiqueContact(cContact){
+        console.log(formCreateCustomer.boutiques[cContact].contacts);
         formCreateCustomer.boutiques[cContact].contacts.push({
             contact_name:'',
             phone: '',
             email:''        
         });
-        console.log(formCreateCustomer)
+        console.log(formCreateCustomer);
     }
     
     function removeFormBoutiqueConatct(cBoutique,cContact){
@@ -196,7 +198,6 @@
                 </div>
             </template>
             <template #footer>
-                <Button icon="pi pi-star-fill" type="submit" label="Create Customer" size="small" class="w-full" @click.prevent="createCustomer()"/>
             </template>
             </Card>
         </div>
@@ -247,23 +248,23 @@
                                         <template #title>Contacts</template>
                                         <template #subtitle>Contacts from Boutique # {{cB+1}}, add all you want to notificate for the state for this boxes and merchandasing</template>
                                         <template #content>
-                                            <Accordion :activeIndex="0">
-                                                <AccordionTab v-for="(contact,cC) in boutique.contacts" :key="cC">
-                                                    <template #header>
-                                                        <span class="flex align-items-center gap-2 w-full">
-                                                            <span class="font-bold white-space-nowrap">Contact # {{cC+1}}</span>
-                                                            <Button icon="pi pi-trash" class="ml-3" @click="removeFormBoutiqueConatct(cB,cC)" severity="danger" rounded outlined/>
-                                                        </span>
+                                            <template v-for="(contact,cC) in boutique.contacts" :key="cC">
+                                                <Fieldset :toggleable="true" class="mb-3">
+                                                    <template #legend>
+                                                        <div class="flex align-items-center p-0 m-0">
+                                                            <span class="font-bold">Contact # {{cC+1}}</span>
+                                                            <Button icon="pi pi-trash" class="ml-3" @click="removeFormBoutiqueConatct(cB,cC)" severity="danger" text rounded/>
+                                                        </div>
                                                     </template>
                                                     <div class="p-fluid formgrid grid">
-                                                        <div class="field col-12">
+                                                        <div class="field col-12 md:col-6">
                                                             <label>Names:</label>
                                                             <InputText  
                                                                 type="text" 
                                                                 v-model="contact.contact_name"
                                                             />
                                                         </div>
-                                                        <div class="field col-12">
+                                                        <div class="field col-12 md:col-6">
                                                             <label for="inpBoutiqueContactPhone">Phone:</label>
                                                             <InputText  
                                                                 type="text" 
@@ -278,8 +279,8 @@
                                                             />
                                                         </div>
                                                     </div>
-                                                </AccordionTab>
-                                            </Accordion>
+                                                </Fieldset>
+                                            </template>
                                         </template>
                                         <template #footer>
                                             <Button icon="pi pi-user-plus" label="Add Contact" @click="addFormBoutiqueContact(cB)" size="small" severity="secondary"/>
@@ -294,6 +295,9 @@
                     <Button icon="pi pi-plus" label="Add Boutique" severity="success" @click="addFormBoutique()" size="small" class="w-full"/>
                 </template>
             </Card>
+        </div>
+        <div class="col-12">
+            <Button icon="pi pi-star-fill" type="submit" label="Create Customer" class="w-full" @click.prevent="createCustomer()"/>
         </div>
     </div>
 </template>

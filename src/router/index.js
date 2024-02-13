@@ -199,6 +199,23 @@ const router = createRouter({
             
         },
         {
+            path: '/auth/forgot-password',
+            name: 'forgot-password',
+            component: () => import('@/views/pages/auth/ForgotPassword.vue'),
+            meta:{
+                isAuth:false
+            }
+            
+        },
+        {
+            path: '/reset-password',
+            name: 'reset-password',
+            component: () => import('@/views/pages/auth/ResetPassword.vue'),
+            meta:{
+                isAuth:true
+            }
+        },
+        {
             path: '/auth/access',
             name: 'accessDenied',
             component: () => import('@/views/pages/auth/Access.vue'),

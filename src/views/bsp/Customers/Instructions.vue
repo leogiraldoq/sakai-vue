@@ -11,8 +11,11 @@
     const boutiques = ref();
     const boutiquesResume = ref();
     const boutiquesOptions = ref();
+    const create = ref(true);
+    const update = ref(false);
     const instructionsClient = reactive({
-        customerId: customerId,
+        idRelCustomerIns: null,
+        customerId: customerId.value,
         boutiques:[],
         title: null,
         customerInstructions: null,
@@ -42,8 +45,8 @@
             boutiquesResume.value = res.data.resume;
             customerName.value = res.data.customer;
         });
-        console.log(boutiquesResume.value)
-        boutiquesOptions.value = boutiques.value.originalResult;
+        console.log(instructionsClient)
+        boutiquesOptions.value = boutiques.value.boutiques;
     });
     function convertImage(e){
         const file = e.target.files[0];
@@ -58,9 +61,30 @@
         const messageService = new MessageService();
         try {
             let resCreatedIns = await instructionsService.create(instructionsClient);
-            console.log(resCreatedIns.data)
             messageService.successMessageSimple(resCreatedIns.message,"Got it!");
-            Object.assign(instructionsClient,{
+            resetInstructions();
+        } catch (e) {
+            messageService.errorMessage(e)        
+        }
+    }
+    
+    async function updateInstructions(){
+        
+    }
+    
+    function showInstructions(value){
+        let instructions = value.instructions;
+        Object.assign(instructionsClient,JSON.parse(instructions));
+        instructionsClient.idRelCustomerIns = value.id_instruction;
+        instructionsClient.customerId = customerId.value;
+        console.log(instructionsClient)
+        create.value = false;
+        update.value = true;
+    }
+    
+    function resetInstructions(){
+        Object.assign(instructionsClient,{
+                customerId: customerId.value,
                 boutiques:[],
                 title: null,
                 customerInstructions: null,
@@ -81,13 +105,8 @@
                 sampleImage:null,
                 specialObservations: null
             });
-        } catch (e) {
-            messageService.errorMessage(e)        
-        }
-    }
-    
-    function showInstructions(value){
-        Object.assign(instructionsClient,JSON.parse(value))
+        create.value = true
+        update.value = false
     }
 </script>
 <template>
@@ -107,17 +126,18 @@
                             <div class="col-12 md:col-6" style="text-align: center;align-content: center;">
                                 <Card>
                                     <template #header >
-                                        <Image :src="resume.sampleImage" style="width: 100%" width="auto" preview />
+                                        <Image :src="resume.sampleImage" width="100%" preview />
                                     </template>
                                     <template #subtitle>
-                                        {{ resume.title }}
+                                        <h5><b>Title:</b> {{ resume.title }}</h5>
                                     </template>
                                     <template #content>
-                                        {{ resume.name }}
+                                        <p><b>Boutique(s)</b> {{ resume.name }}</p>
+                                        <span v-if="resume.principal">Principal Instructions</span>
+                                        <span v-else>No principal instructions</span>
                                     </template>
                                     <template #footer>
-                                        
-                                            <Button icon="pi pi-eye" severity="info" rounded aria-label="Show Instructions" @click="showInstructions(resume.instructions)"/>
+                                            <Button icon="pi pi-eye" severity="info" rounded aria-label="Show Instructions" @click="showInstructions(resume)"/>
                                             <Button icon="pi pi-check" severity="success" rounded aria-label="Principal"/>
                                             <Button icon="pi pi-trash" severity="danger" rounded aria-label="Principal"/>
                                         
@@ -327,8 +347,10 @@
                     </form>
                 </template>
                 <template #footer>
-                    <div class="field col-12">
-                         <Button type="submit" label="Create intsructions" class="w-full p-3" @click.prevent="createInstructions()"></Button>
+                    <div class="field col-12 p-0">
+                         <Button icon="pi pi-plus" label="Create intsructions" class="w-full mb-2" severity="success"@click.prevent="createInstructions()" v-show="create"/>
+                         <Button icon="pi pi-pencil" label="Update intsructions" class="w-full mb-2" severity="warning" @click.prevent="updateInstructions()" v-show="update"/>
+                         <Button icon="pi pi-undo" label="Reset intsructions" class="w-full" severity="danger" @click.prevent="resetInstructions()" />
                     </div>
                 </template>
             </Card>

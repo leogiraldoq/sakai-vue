@@ -33,7 +33,7 @@ const formCreateEmployee = reactive({
        username: null,
        profile: null
 });
-console.log(formCreateEmployee)
+
 //Validation rules
 const rules = computed(()=>({
     names: { required, minLength: minLength(4), maxLength: maxLength(50) },

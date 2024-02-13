@@ -17,10 +17,10 @@
     
     const loadingCreate = ref(false);
     const newShop = reactive({
-        name: null,
-        contactName: null,
-        contactNumber: null,
-        email: null
+        name: '',
+        contactName: '',
+        contactNumber: '',
+        email: ''
     });
     const rulesNewShop = computed(()=>({
        name: {required,minLength:minLength(2),maxLength:maxLength(250)},
@@ -38,12 +38,13 @@
             let shop = await shipperService.create(newShop);
             shopList.value.push(shop.data);
             await messageService.successMessageSimple(shop.message,"Ok!");
-            Object,assign(newShop,{
-                name: null,
-                contactName: null,
-                contactNumber: null,
-                email: null
+            Object.assign(newShop,{
+                name: '',
+                contactName: '',
+                contactNumber: '',
+                email: ''
             });
+            vNewShop$.value.$reset();
             loadingCreate.value = false;
         } catch (e) {
             loadingCreate.value = false;

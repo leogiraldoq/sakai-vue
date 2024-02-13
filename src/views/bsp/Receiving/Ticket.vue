@@ -32,10 +32,10 @@
                 saveTicket();
             }
             reader.readAsDataURL(pdfOut);
-            pdfs.ticket = reader.result
-            pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
         });
-        
+        pdfs.ticket = formTicket.ticket
+        pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
+
     });
     
     function parseDate(date){
@@ -47,7 +47,6 @@
         try {
             const receiveService = new ReceiveService();
             const resTicket = await receiveService.upserTicket(formTicket);
-            console.log(pdfs)
             pdfPrintDialog.value = true;
         } catch (e) {
             messageService.errorMessage(e)
