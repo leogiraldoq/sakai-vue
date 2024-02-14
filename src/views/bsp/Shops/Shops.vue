@@ -56,7 +56,7 @@
     <div class="grid">
         <div class="col-12 md:col-8">
             <Card>
-                <template #title>Resume</template>
+                <template #title>Stores Resume</template>
                 <template #content>
                     <DataTable 
                         :value="shopList"
@@ -86,7 +86,7 @@
         </div>
         <div class="col-12 md:col-4">
             <Card>
-                <template #title>Create</template>
+                <template #title>Create Store</template>
                 <template #content>
                     <form ref="formCreateShop" class="p-fluid formgrid grid">
                         <div class="field col-12">

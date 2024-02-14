@@ -1,145 +1,25 @@
 <script setup>
     import { ref, reactive } from 'vue';
     import { StreamBarcodeReader } from 'vue-barcode-reader';
-    import Colors from '@/assets/json/Colors'
-    
     import QrService from '@/service/QrService';
     import MessageService from '@/service/MessageService';
-    import ProcessingService from '@/service/ProcessingService';
-    
-    const msgService = new MessageService();
-    const processService = new ProcessingService();
-    const qrService = new QrService();
-    
+
     const showCamera = ref(false);
     const showInstructions = ref(false);
     const saveButtonDisabled = ref(false);
     const showResultQr = ref(false);
-    const colorsOptions = ref(Colors);
-    const colorsItems = ref();
-    const formProcessing = reactive({
-       preBillId: null,
-       shareWork: false,
-       stylesProcess:[
-           {
-               id: null,
-               color: null,
-               quantity: null
-           }
-       ]
-    });
-    const qrRead = reactive({
-       preBillId: null,
-       customer: null,
-       boutique: null,
-       store: null,
-       invoiceNum: null,
-       total: null,
-       instructions: null
-    });
-
-    function displayCamera(){
-        showCamera.value = true;
-        messageQr.value = null;
-    }
     
-    const messageQr = ref([]);
-    async function onDecodeBspQr(qrData){
-        try {
-            showCamera.value = false;
-            const resultQr = await qrService.readQrProcessing(qrData);
-            if(resultQr.data){
-                if(resultQr.data.invoiceNum == null){
-                    messageQr.value=[
-                        { severity: 'error', content: "This box NOT has invoice created. Contact the manager", id: 1}
-                    ];
-                } else if(resultQr.data.instructions == null){
-                    messageQr.value=[
-                        { severity: 'error', content: "The customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> NOT has intructions created. Please contact the manager.", id: 1}
-                    ];
-                }else{
-                    showResultQr.value = true;
-                    saveButtonDisabled.value = false;
-                    Object.assign(qrRead,resultQr.data)
-                }
-            }else{
-                messageQr.value=[
-                    { severity: 'error', content: "The Qr that you read its corrupt", id: 1}
-                ];
-            }
-        } catch (e) {
-            msgService.errorMessage(e)
-        }
-    }
     
-    const searchColors = (event) =>{
-        setTimeout(() =>{
-            if(!event.query){
-                colorsItems.value = [...colorsOptions.value];
-            }else{
-                colorsItems.value = colorsOptions.value.filter((color) =>{
-                   return color.name.toLowerCase().startsWith(event.query.toLowerCase()); 
-                });
-            }
-        },250);
-    }
     
-    function addFormStyle(){
-        formProcessing.stylesProcess.push({
-            id: null,
-            color: null,
-            quantity: null
-        });
-    }
-    
-    function removeFormStyle(counter){
-        if(formProcessing.stylesProcess.length > 1){
-            formProcessing.stylesProcess.splice(counter,1);
-        }
-    }
-    
-    async function saveFormStyle(){
-        try {
-            let totalProcessPieces = 0;
-            formProcessing.preBillId = qrRead.preBillId;
-            const processing = await processService.create(formProcessing);
-            msgService.successMessageSimple(processing.message,"Ok!");
-            Object.assign(formProcessing,{
-                preBillId: null,
-                shareWork: false,
-                stylesProcess:[
-                    {
-                        id: null,
-                        color: null,
-                        quantity: null
-                    }
-                ]
-            });
-            Object.assign(qrRead,{
-                preBillId: null,
-                customer: null,
-                boutique: null,
-                store: null,
-                invoiceNum: null,
-                total: null,
-                instructions: null
-            });
-            showResultQr.value = false;
-            saveButtonDisabled.value = true;
-
-        } catch (e) {
-            console.log(e)
-            msgService.errorMessage(e)
-        }
-    }
 </script>
+
 <template>
     <div class="grid">
         <div class="col-12">
             <Card>
                 <template #title>
                     <div class="grid">
-                        <div class="col-12 md:col-6">Processing</div>
+                        <div class="col-12 md:col-6">Quality Control</div>
                         <div class="col-12 md:col-6">
                             <Button icon="pi pi-qrcode" label="Scan Qr" severity="help" @click="displayCamera" size="small" class="w-full"/>
                         </div>
@@ -178,7 +58,7 @@
                                         <InputText v-model="qrRead.total" disabled size="large"/>                                
                                     </div>
                                 </div>
-                                <div class="col-6">
+                               <div class="col-6">
                                     <div class="field col-12">
                                         <label id="inpQntyLabels">Labels you have:</label>
                                         <InputNumber v-model="qrRead.labels" id="inpQntyLabels" size="large"/>

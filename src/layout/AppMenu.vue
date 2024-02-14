@@ -34,6 +34,13 @@ const model = ref([
                 items: [
                     { label: 'Process', icon: 'pi pi-fw pi-tablet', to: '/bsp/processing/create'},
                 ]
+            },
+            {
+                label: 'Quality',
+                icon: 'pi pi-fw pi-flag-fill',
+                items: [
+                    { label: 'Control', icon: 'pi pi-fw pi-history', to: '/bsp/quality/create'},
+                ]
             }
         ]
     },
@@ -78,7 +85,7 @@ const model = ref([
                 to:'/bsp/boxes'
             },
             {
-                label: 'Shops',
+                label: 'Stores',
                 icon: 'pi pi-shopping-bag',
                 to:'/bsp/shops'
             },

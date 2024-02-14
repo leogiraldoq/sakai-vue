@@ -43,10 +43,16 @@
             showCamera.value = false;
             const resultQr = await qrService.readQrPreBill(qrData);
             if(resultQr.data){
-                showResultQr.value = true;
-                saveButtonDisabled.value = false;
-                Object.assign(qrRead,resultQr.data)
-                formInvoice.receiveDetailId = qrRead.id_receive_details;
+                if(resultQr.data.instructions !== null){
+                    showResultQr.value = true;
+                    saveButtonDisabled.value = false;
+                    Object.assign(qrRead,resultQr.data)
+                    formInvoice.receiveDetailId = qrRead.id_receive_details;                    
+                }else{
+                    messageQr.value=[
+                        { severity: 'error', content: "The customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> NOT has intructions created. Pleas contact the manager.", id: 1}
+                    ];
+                }
             }else{
                 messageQr.value=[
                     { severity: 'error', content: "The Qr that you read its wrong", id: 1}

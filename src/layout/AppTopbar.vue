@@ -3,6 +3,10 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
 
+import MessageService from '@/service/MessageService';
+import UsersService from '@/service/UsersService';
+
+
 const { layoutConfig, onMenuToggle } = useLayout();
 
 const outsideClickListener = ref(null);
@@ -20,6 +24,18 @@ onBeforeUnmount(() => {
 const onTopBarMenuButton = () => {
     topbarMenuActive.value = !topbarMenuActive.value;
 };
+const logOut = async () => {
+    const msgService = new MessageService();
+    try{
+        const userService = new UsersService();
+        const response = await userService.logOut();
+        msgService.successMessageSimple(response.message ,'Continue')
+        router.push({name: 'login'});
+    }catch(err){
+        msgService.errorMessage(err);
+    }
+}
+
 const onSettingsClick = () => {
     topbarMenuActive.value = false;
     router.push('/documentation');
@@ -72,16 +88,16 @@ const isOutsideClicked = (event) => {
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
-                <i class="pi pi-calendar"></i>
-                <span>Calendar</span>
-            </button>
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
             <button @click="onSettingsClick()" class="p-link layout-topbar-button">
                 <i class="pi pi-cog"></i>
                 <span>Settings</span>
+            </button>
+            <button @click="logOut()" class="p-link layout-topbar-button">
+                <i class="pi pi-sign-out"></i>
+                <span>Log Out</span>
             </button>
         </div>
     </div>

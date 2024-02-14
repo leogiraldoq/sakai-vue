@@ -30,5 +30,19 @@ export default class UsersService{
         }
         throw resForgotPass;
      }
-        
+     
+     async logOut(){
+         const resLogOut = await fetch(import.meta.env.VITE_API_URL + '/auth/logout',{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if(resLogOut.ok){
+            return await resLogOut.json();
+        }
+        throw resLogOut;
+     }
 }
