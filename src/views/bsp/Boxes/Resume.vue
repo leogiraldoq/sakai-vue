@@ -20,7 +20,7 @@
         dimensions:''
     });
     const rulesFormBoxCreate = computed(()=> ({
-        describe: {required,minLength: minLength(3), maxLength: maxLength(20)},
+        describe: {required,minLength: minLength(1), maxLength: maxLength(20)},
         dimensions: {required,minLength: minLength(2), maxLength: maxLength(10)},        
     }));
     const vBoxCreate$ = useVuelidate(rulesFormBoxCreate,formBoxCreate);
