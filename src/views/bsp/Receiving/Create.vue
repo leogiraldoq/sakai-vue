@@ -25,7 +25,8 @@
                 boutique: null,
                 box: null,
                 quantity: 0,
-                weight: 0
+                weight: 0,
+                ref:false
            }           
        ]
     });
@@ -64,6 +65,7 @@
     const shipperService = new ShippersService();
     const customerService = new CustomerService();
     const boxService = new BoxesService();
+    const boutiqueOne = ref(null);
     
     onMounted(async () => {
        await shipperService.getAll().then((res) => ( shippersOptions.value = res.data ));   
@@ -100,6 +102,13 @@
 
     const bringBoutiques=(event)=>{
         boutiquesOptions.value = formReceive.customer.boutiques;
+        console.log(formReceive.customer)
+        console.log(formReceive.customer.boutiques.length)
+        if(formReceive.customer.boutiques.length == 1){
+            boutiqueOne.value = formReceive.customer.boutiques[0];
+            formReceive.receive[0].boutique = boutiqueOne.value;
+        }
+        console.log(formReceive)
         itsProcess();
     }
 
@@ -127,12 +136,20 @@
         },250);
     }
     
-    function addReceiveBox(){
+    function addReceiveBox(c){
         formReceive.receive.push({
+                boutique: boutiqueOne.value,
                 box: null,
                 quantity: 0,
-                weight: 0
-           });
+                weight: 0,
+                ref:true
+        });
+        console.log(c+1)
+        const element = document.getElementById(c+1);
+        console.log(element)
+        if (element) {
+          element.focus();
+        }
     }
     
     function deleteReceiveBox(counter){
@@ -151,6 +168,7 @@
             }
             let resReceive = await receiveService.create(formReceive);
             createReceive = resReceive.data.ticket;
+            console.log(resReceive.data.resume)
             receiveListPerDate.value.push(resReceive.data.resume);
             //await printJS({printable:createReceive.stickers, type:'pdf',base64:true});
             await messageService.successMessageSimple(resReceive.message,"Ok!");
@@ -166,7 +184,8 @@
                         boutique: null,
                         box: null,
                         quantity: 0,
-                        weight: 0
+                        weight: 0,
+                        ref:false
                     }           
                 ]
             });
@@ -273,114 +292,123 @@
 
 <template>
     <div class="grid">
-        <div class="col-12 md:col-5">
+        <div class="col-12">
             <Card>
-                <template #title>Create Receive</template>
+                <template #title>New Receive</template>
                 <template #content>
-                    <form ref="formRecieveCreate" class="p-fluid formgrid grid">
-                        <div class="field col-12">
-                            <label for="acCustomer" :class="{'p-error': vFormReceive$.customer.$error}">Customer:</label>
-                            <AutoComplete 
-                                id="acCustomer"
-                                v-model="formReceive.customer"
-                                :suggestions="customerItems"
-                                optionLabel="name"
-                                dropdown
-                                aria-describedby="acCustomer-help"
-                                @complete="searchCustomers"
-                                @change="bringBoutiques"
-                            />
-                            <small id="acCustomer-help" class="p-error" v-if="vFormReceive$.customer.$error">{{ vFormReceive$.customer.$errors[0].$message }}</small>
-                        </div>
-                        <div class="field col-12">
-                            <label for="acShippers" :class="{'p-error': vFormReceive$.shipper.$error}">Shop Name:</label>
-                            <AutoComplete 
-                                id="acShippers"
-                                v-model="formReceive.shipper" 
-                                :suggestions="shippersItems"
-                                optionLabel="name"
-                                dropdown
-                                aria-describedby="acShippers-help"
-                                @complete="searchShippers"
-                                @change="itsProcess"
-                            />
-                            <small id="acShippers-help" class="p-error" v-if="vFormReceive$.shipper.$error">{{ vFormReceive$.shipper.$errors[0].$message }}</small>
-                        </div>
-                        <div class="field col-12">
-                            <label id="txtObservations">Observations:</label>
-                            <Textarea v-model="formReceive.observations" rows="3" cols="20" />
-                        </div>
-                        <div class="col-12">
-                            <p class="text-bold">Boxes to receive</p>
-                        </div>
-                        <div v-for="(receive,cR) in formReceive.receive" :key="cR">
-                            <Fieldset :toggleable="true" class="mt-2">
-                                <template #legend>
-                                    Box Receive # {{cR+1}} <Button icon="pi pi-trash" class="ml-3" @click="deleteReceiveBox(cR)" severity="danger" rounded outlined/>
-                                </template>
-                                <div class="p-fluid formgrid grid">
-                                    <div class="field col-12">
-                                        <label>Boutique:</label>
+                    <div class="grid-nogutter">
+                        <form ref="formRecieveCreate" class="p-fluid formgrid grid">
+                            <div class="col-7">
+                                <div class="grid">
+                                    <div class="field col-6">
+                                        <label for="acCustomer" :class="{'p-error': vFormReceive$.customer.$error}">Customer:</label>
                                         <AutoComplete 
-                                            v-model="receive.boutique" 
-                                            :suggestions="boutiquesItems"
+                                            id="acCustomer"
+                                            v-model="formReceive.customer"
+                                            :suggestions="customerItems"
                                             optionLabel="name"
                                             dropdown
-                                            @complete="searchBoutiques"
+                                            aria-describedby="acCustomer-help"
+                                            @complete="searchCustomers"
+                                            @item-select="bringBoutiques"
                                         />
+                                        <small id="acCustomer-help" class="p-error" v-if="vFormReceive$.customer.$error">{{ vFormReceive$.customer.$errors[0].$message }}</small>
                                     </div>
-                                    <div class="field col-12 md:col-6">
-                                        <label>Product:</label>
+                                    <div class="field col-6">
+                                        <label for="acShippers" :class="{'p-error': vFormReceive$.shipper.$error}">Store:</label>
                                         <AutoComplete 
-                                            v-model="receive.box" 
-                                            :suggestions="boxesItems"
-                                            optionLabel="describe"
-                                            aria-describedby="acBoxes-help"
-                                            @complete="searchBox"
+                                            id="acShippers"
+                                            v-model="formReceive.shipper" 
+                                            :suggestions="shippersItems"
+                                            optionLabel="name"
+                                            dropdown
+                                            aria-describedby="acShippers-help"
+                                            @complete="searchShippers"
+                                            @change="itsProcess"
                                         />
+                                        <small id="acShippers-help" class="p-error" v-if="vFormReceive$.shipper.$error">{{ vFormReceive$.shipper.$errors[0].$message }}</small>
                                     </div>
-                                    <div class="field col-12 md:col-3">
-                                        <label>Quantity:</label>
-                                        <InputNumber 
-                                            v-model="receive.quantity" 
-                                            inputId="integeronly"
-                                        />
-                                    </div>
-                                    <div class="field col-12 md:col-3">
-                                        <label>Weight (Lbs):</label>
-                                        <InputNumber 
-                                            v-model="receive.weight" 
-                                            inputId="integeronly"
-                                        />
+                                    <div class="col-12 mt-3">
+                                        <p>Details Receive</p>
+                                        <table>
+                                            <tr>
+                                                <th style="width: 10%;">#</th>
+                                                <th style="width: 15%;">Quantity</th>
+                                                <th style="width: 20%;">Package</th>
+                                                <th style="width: 40%;">Boutique</th>
+                                                <th style="width: 15%;">WT (Lbs)</th>
+                                                <th></th>
+                                            </tr>
+                                            <tr v-for="(receive,cR) in formReceive.receive" :key="cR">
+                                                <td><b>{{ cR+1 }}</b></td>
+                                                <td>
+                                                    <InputNumber 
+                                                        v-model="receive.quantity" 
+                                                        v-bind:id="cR"
+                                                        focus="receive.ref"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <AutoComplete 
+                                                        v-model="receive.box" 
+                                                        :suggestions="boxesItems"
+                                                        optionLabel="describe"
+                                                        aria-describedby="acBoxes-help"
+                                                        @complete="searchBox"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <AutoComplete 
+                                                        v-model="receive.boutique" 
+                                                        :suggestions="boutiquesItems"
+                                                        optionLabel="name"
+                                                        dropdown
+                                                        @complete="searchBoutiques"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <InputNumber 
+                                                        v-model="receive.weight" 
+                                                        inputId="integeronly"
+                                                        v-on:keyup.enter="addReceiveBox(cR)"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <Button icon="pi pi-trash" @click="deleteReceiveBox(cR)" severity="danger" rounded outlined tabindex="-1"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div class="field col-12 mt-3">
+                                            <label id="txtObservations">Observations:</label>
+                                            <Textarea v-model="formReceive.observations" rows="3" cols="20" />
+                                        </div>
                                     </div>
                                 </div>
-                            </Fieldset>    
-                        </div>
-                        <div class="mt-2 col-12">
-                            <Button icon="pi pi-plus" label="Add receive box" @click="addReceiveBox" size="small" severity="help" />
-                        </div>
-                        <div class="col-12 mt-3">
-                            <video id="video" v-show="showVideo" style="width: 100%">Video stream not available.</video>
-                            <canvas id="canvas" v-show="showCanvas"></canvas>
-                            <Button id="startbutton" icon="pi pi-camera" label="Take photo"  severity="success" class="w-full"/>
-                        </div>
-                        <div class="col-12">
-                            <transition-group tag="div">
-                                <Message v-for="msg of messageProcess" :severity="msg.severity" :key="msg.id" :closable="false">{{ msg.content }}</Message>
-                            </transition-group>
-                        </div>
-                    </form>
+                            </div>
+                            <div class="col-5">
+                                <div class="col-12">
+                                    <transition-group tag="div">
+                                        <Message v-for="msg of messageProcess" :severity="msg.severity" :key="msg.id" :closable="false">{{ msg.content }}</Message>
+                                    </transition-group>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <video id="video" v-show="showVideo" style="width: 100%">Video stream not available.</video>
+                                    <canvas id="canvas" v-show="showCanvas"></canvas>
+                                    <Button id="startbutton" icon="pi pi-camera" label="Take photo"  severity="help" class="w-full"/>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <Button icon="pi pi-save" label="Save and Print" @click="createReceiveBox" severity="success" :loading="loadingCreate" class="w-full" />
+                                </div>
+                            </div>
+                        </form>    
+                    </div>
                 </template>
-                <template #footer>
-                    <Button icon="pi pi-save" label="Save Receive" @click="createReceiveBox" severity="success" :loading="loadingCreate" class="w-full" />
-                </template>                
             </Card>
-            
             <Sidebar v-model:visible="sideBarTicket" position="right" class="w-full md:w-30rem lg:w-20rem">
                 <Ticket :data="createReceive"></Ticket>
             </Sidebar>
         </div>
-        <div class="col-12 md:col-7">
+        <div class="col-12">
             <Card>
                 <template #title>
                     Resume Receiving from {{todayDate}}
@@ -434,5 +462,12 @@
         width: 350px;
         height: 260px;
     }
-    
+    table, td, th {
+        border: 3px dotted #cccccc;
+        text-align: center;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
 </style>

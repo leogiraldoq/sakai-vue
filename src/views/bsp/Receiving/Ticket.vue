@@ -23,7 +23,7 @@
     onMounted( async ()=>{
         await domtoimage.toPng(ticketToPrint.value).then((imageData) => {
             const pdf = new jsPDF("p","in",[4,11]);
-            pdf.addImage(imageData,"PNG",0.07,0.05,4,11);
+            pdf.addImage(imageData,"PNG",0.1,0.05,4,11);
             var pdfOut = pdf.output('blob');
             var reader = new FileReader();
             reader.onloadend = () => {
@@ -81,7 +81,7 @@
 </script>
 
 <template>
-    <div class="grid justify-content-center align-items-center text-black-alpha-90" ref="ticketToPrint" id="ticketToPrint">
+    <div class="grid justify-content-center align-items-center text-black text-xs" ref="ticketToPrint" id="ticketToPrint">
         <div class="col-12 text-center">
             <img src="/layout/images/logoBlueStarPacking.png" alt="Blue Star Packing" class="w-10"/>
             <b>Receiving Receipt # {{ticket.follow_number}}</b><br/>
@@ -89,11 +89,11 @@
             <small>PHONE (562)835-2515 and (323)274-8378</small><br/>
             <small>bluestarpacking@gmail.com</small><br/>
             <small>www.bluestarpackingla.com</small><br/>
-            <p><b>Shipper:</b> {{ticket.shipper.name}}<br/>
+            <p><b>Store:</b> {{ticket.shipper.name}}<br/>
                 <b>Customer:</b> {{ticket.customer.name}}<br/>
                 <b>Date receive:</b> {{parseDate(ticket.created_at)}}</p>
             <p>Resume receive:</p>
-            <table class="text-center text-sm mb-2">
+            <table class="text-center text-sm mb-2 ml-1">
                 <tr>
                     <th>Boutique</th>
                     <th>Quant</th>
@@ -137,7 +137,7 @@
 
 <style scoped>
     table,tr,th,td{
-        border: 1px dotted black;
+        border: 1px solid black;
         border-collapse: collapse;
     }
 </style>

@@ -34,6 +34,7 @@
                         contact_name:'',
                         phone: '',
                         email:'',
+                        reemail:''
 
                     }
                 ]
@@ -84,7 +85,8 @@
                 {
                     contact_name:'',
                     phone: '',
-                    email:''
+                    email:'',
+                    reemail:''
                 }
             ]   
         });
@@ -105,7 +107,8 @@
         formCreateCustomer.boutiques[cContact].contacts.push({
             contact_name:'',
             phone: '',
-            email:''        
+            email:'',
+            reemail:''
         });
         console.log(formCreateCustomer);
     }
@@ -137,7 +140,8 @@
                             {
                                 contact_name:'',
                                 phone: '',
-                                email:''
+                                email:'',
+                                reemail:''
                             }
                         ]
                     }
@@ -283,6 +287,15 @@
                                                                 v-model="contact.email"
                                                             />
                                                         </div>
+                                                        <div class="field col-12">
+                                                            <label for="inpBoutiqueContactReEmail">Verify the Email:</label>
+                                                            <InputText  
+                                                                type="text" 
+                                                                v-model="contact.reemail"
+                                                                @paste.prevent
+                                                            />
+                                                        </div>
+
                                                     </div>
                                                 </Fieldset>
                                             </template>
