@@ -46,6 +46,21 @@ export default class ReceiveService{
         throw listReceiveDetails;
     }
     
+    async queryDetailsAll(){
+        const listReceiveDetails = await fetch(import.meta.env.VITE_API_URL + '/receive/details/list-all/',{
+            method: 'GET',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if(listReceiveDetails.ok){
+            return await listReceiveDetails.json();
+        }
+        throw listReceiveDetails;
+    }
+    
     async listAll(){
         const resumeReceive = await fetch(import.meta.env.VITE_API_URL + '/receive/details/list-all',{
             method: 'GET',
@@ -75,5 +90,35 @@ export default class ReceiveService{
             return await resTicketSave.json();
         }
         throw resTicketSave;
+    }
+    
+    async delete(dataId,followNum){
+        const resDeletion = await fetch(import.meta.env.VITE_API_URL + '/receive/delete/' + btoa(dataId) + "/" + followNum,{
+            method: 'GET',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        if(resDeletion.ok){
+            return await resDeletion.json();
+        }
+        throw resDeletion;
+    }
+    
+    async bringTicket(idReceive){
+        const resTicket = await fetch(import.meta.env.VITE_API_URL + '/receive/ticket/' + idReceive,{
+            method: 'GET',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        if(resTicket.ok){
+            return await resTicket.json();
+        }
+        throw resTicket;
     }
 }

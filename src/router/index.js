@@ -115,14 +115,6 @@ const router = createRouter({
                     }
                 },
                 {
-                    path: '/bsp/receiving',
-                    name: 'recibing',
-                    component: () => import('@/views/bsp/Receiving/Resume.vue'),
-                    meta:{
-                        isAuth:true
-                    }
-                },
-                {
                     path: '/bsp/receiving/create',
                     name: 'recibingcreate',
                     component: () => import('@/views/bsp/Receiving/Create.vue'),

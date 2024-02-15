@@ -73,7 +73,7 @@ function redirectForgotPassword(){
 </script>
 
 <template>
-    <div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
         <div class="flex flex-column align-items-center justify-content-center">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                 <div class="w-full surface-card py-8 px-1 sm:px-8" style="border-radius: 53px">
@@ -131,7 +131,7 @@ function redirectForgotPassword(){
     <AppConfig simple />
 </template>
 
-<style scoped>
+<style>
 .pi-eye {
     transform: scale(1.6);
     margin-right: 1rem;
@@ -140,5 +140,10 @@ function redirectForgotPassword(){
 .pi-eye-slash {
     transform: scale(1.6);
     margin-right: 1rem;
+}
+
+body{
+    background-image: url("../../../../layout/images/background.svg");
+    background-repeat: repeat;
 }
 </style>

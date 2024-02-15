@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, reactive, onMounted } from 'vue';
+    import { ref, reactive, onMounted, defineEmits } from 'vue';
     import moment from 'moment';
     
     import { jsPDF } from "jspdf";
@@ -9,7 +9,9 @@
     
     
     const props = defineProps(['data']);
-    const ticket = props.data;
+    const emit = defineEmits(['deleteTicket']);
+    const action = ref(props.data.action);
+    const ticket = props.data.ticket;
     const ticketToPrint = ref(null);
     const formTicket = reactive({
         receiveId: ticket.id_receive,
@@ -20,10 +22,21 @@
         ticket: null,
         stickers: null
     });
+    const showDelete = ref(false);
+    
     onMounted( async ()=>{
+        if(action.value === "create"){
+            await createTicketToPrint();
+        }else if (action.value === "delete") {
+            showDelete.value = true;
+        }
+
+    });
+    
+    async function createTicketToPrint(){
         await domtoimage.toPng(ticketToPrint.value).then((imageData) => {
             const pdf = new jsPDF("p","in",[4,11]);
-            pdf.addImage(imageData,"PNG",0.1,0.05,4,11);
+            pdf.addImage(imageData,"PNG",0.5,0.05,4,11);
             var pdfOut = pdf.output('blob');
             var reader = new FileReader();
             reader.onloadend = () => {
@@ -32,7 +45,7 @@
             }
             reader.readAsDataURL(pdfOut);
         });
-    });
+    }
     
     function parseDate(date){
         return moment(date).format('MMMM Do YYYY, h:mm:ss a');
@@ -78,10 +91,16 @@
             console.log(printIframeStickers);
         }
     }
+    
+    function yesDelete(idReceive){
+        console.log(idReceive);
+        emit('deleteTicket',ticket.id_receive);
+    }
 </script>
 
 <template>
     <div class="grid justify-content-center align-items-center text-black text-xs" ref="ticketToPrint" id="ticketToPrint">
+        <div class="col-12" v-show="showDelete"><h5 style="color: #ff0000">This is the receive that you want to delete?</h5></div>
         <div class="col-12 text-center">
             <img src="/layout/images/logoBlueStarPacking.png" alt="Blue Star Packing" class="w-10"/>
             <b>Receiving Receipt # {{ticket.follow_number}}</b><br/>
@@ -111,6 +130,9 @@
             </table>
             <p><b>Received By:</b> {{ticket.user.employee.names}}</p>
             <p class="text-sm"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
+        </div>
+        <div class="col-12" v-show="showDelete">
+            <Button label="Yes Delete" size="small" severity="danger" icon="pi pi-trash" class="w-full" @click="yesDelete(ticket.id_receive)"/>
         </div>
     </div>
     <Dialog v-model:visible="pdfPrintDialog" modal header="Print" :style="{ width: '70rem' }">

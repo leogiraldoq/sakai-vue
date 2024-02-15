@@ -32,8 +32,10 @@
                 return;
             }
             let newBox = await boxesService.create(formBoxCreate);
+            console.log(newBox)
             await messageService.successMessageSimple(newBox.message,"Ok!");
             boxesResume.value.push(newBox.data);
+            console.log(boxesResume.value);
             Object.assign(formBoxCreate,{
                 describe:'',
                 dimensions:''
@@ -66,8 +68,8 @@
                         <Column header="Actions">
                         <template #body="{data}">
                             <span class="p-buttonset">
-                                <Button label="Update" size="small" severity="warning" outlined :value="data"/>
-                                <Button label="Delete" size="small" severity="danger" outlined :value="data.id_box"/>
+                                <Button label="Update" size="small" severity="warning" :value="data"/>
+                                <Button label="Delete" size="small" severity="danger" :value="data.id_box"/>
                             </span>
                         </template>
                     </Column>

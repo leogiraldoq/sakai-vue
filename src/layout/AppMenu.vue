@@ -15,10 +15,7 @@ const model = ref([
             {
                 label: 'Recibing',
                 icon: 'pi pi-fw pi-shopping-bag',
-                items: [
-                    { label: 'Resume', icon: 'pi pi-fw pi-table', to: '/bsp/receiving'},
-                    { label: 'Receive', icon: 'pi pi-fw pi-plus', to: '/bsp/receiving/create'},
-                ]
+                to: '/bsp/receiving/create'
             },
             {
                 label: 'Pre Billing',

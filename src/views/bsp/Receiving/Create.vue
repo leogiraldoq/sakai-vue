@@ -48,7 +48,10 @@
     const loadingCreate = ref(false);
     const sideBarTicket = ref(false);
     const todayDate = ref(null);
-    var createReceive;
+    const createReceive = reactive({
+        action: "create",
+        ticket: null
+    });
     const receiveListPerDate = ref(null);
     const filtersResume = ref({
         global: {value: null,matchMode: FilterMatchMode.CONTAINS}
@@ -71,10 +74,9 @@
        await shipperService.getAll().then((res) => ( shippersOptions.value = res.data ));   
        await customerService.getCustomerAndBoutique().then((res) => (customerOptions.value = res.data));
        await boxService.listAll().then((res) => (boxesOptions.value = res.data));
-       await receiveService.queryDetailsPerDate(moment().format('YYYY-M-D')).then((list) => (receiveListPerDate.value = list.data));
+       await receiveService.queryDetailsAll(moment().format('YYYY-M-D')).then((list) => (receiveListPerDate.value = list.data));
        todayDate.value = moment().format('MMMM Do YYYY');
        initCamera();
-    
     });
     const searchShippers = (event) =>{
         setTimeout(() =>{ 
@@ -102,13 +104,10 @@
 
     const bringBoutiques=(event)=>{
         boutiquesOptions.value = formReceive.customer.boutiques;
-        console.log(formReceive.customer)
-        console.log(formReceive.customer.boutiques.length)
         if(formReceive.customer.boutiques.length == 1){
             boutiqueOne.value = formReceive.customer.boutiques[0];
             formReceive.receive[0].boutique = boutiqueOne.value;
         }
-        console.log(formReceive)
         itsProcess();
     }
 
@@ -144,12 +143,6 @@
                 weight: 0,
                 ref:true
         });
-        console.log(c+1)
-        const element = document.getElementById(c+1);
-        console.log(element)
-        if (element) {
-          element.focus();
-        }
     }
     
     function deleteReceiveBox(counter){
@@ -167,10 +160,9 @@
                 return;
             }
             let resReceive = await receiveService.create(formReceive);
-            createReceive = resReceive.data.ticket;
-            console.log(resReceive.data.resume)
-            receiveListPerDate.value.push(resReceive.data.resume);
-            //await printJS({printable:createReceive.stickers, type:'pdf',base64:true});
+            createReceive.action = "create";
+            createReceive.ticket = resReceive.data.ticket;
+            receiveListPerDate.value.push(resReceive.data.resume[0]);
             await messageService.successMessageSimple(resReceive.message,"Ok!");
             Object.assign(formReceive,{
                 user: null,
@@ -197,7 +189,6 @@
             messageProcess.value=null;
 
         } catch (err) {
-            console.log(err)
             messageService.errorMessage(err);
             loadingCreate.value = false;
         }
@@ -226,7 +217,6 @@
                 formReceive.process = "PROCESS";
             }
         } catch (e) {
-            console.log(e)
             messageService.errorMessage(e);
         }
 
@@ -256,7 +246,7 @@
                 .catch(function(err){
                     console.log("camera error:"+err)
                 })
-        video.addEventListener('canplay',function(ev){
+            video.addEventListener('canplay',function(ev){
             if(!streaming){
                 height = video.videoHeight / (video.videoWidth / width);
                 if(isNaN(height)){
@@ -286,6 +276,42 @@
             showCanvas.value = true;
             formReceive.photo = canvas.toDataURL("image/jpeg",1.0);
         }
+    }
+    
+    
+    const deleteRe = reactive({
+        id_receive: null
+    });
+    async function showDeleteReceive(id){
+        try{
+            let resDelete = await receiveService.bringTicket(id);
+            createReceive.action = "delete";
+            createReceive.ticket = resDelete.data;
+            console.log(createReceive)
+            sideBarTicket.value = true;
+        }catch(err){
+            console.log(err)
+            messageService.errorMessage(err);
+        }
+    }
+    
+    async function deleteReceive(idReceive){
+        try{
+            let resDelete = await receiveService.delete(idReceive,createReceive.ticket.follow_number);
+            sideBarTicket.value = false;
+            receiveListPerDate.value = resDelete.data
+            await messageService.successMessageSimple(resDelete.message,"Ok!");
+            Object.assign(createReceive,{
+                action: "create",
+                ticket: null
+            });
+        } catch (err) {
+            messageService.errorMessage(err);
+        }
+    }
+    
+    const formatDate = (date) =>{
+        return moment(date).format('MMM Do YYYY, h:mm:ss a');
     }
     
 </script>
@@ -405,32 +431,36 @@
                 </template>
             </Card>
             <Sidebar v-model:visible="sideBarTicket" position="right" class="w-full md:w-30rem lg:w-20rem">
-                <Ticket :data="createReceive"></Ticket>
+                <Ticket 
+                    :data="createReceive"
+                    @deleteTicket="deleteReceive"
+                ></Ticket>
             </Sidebar>
         </div>
         <div class="col-12">
             <Card>
                 <template #title>
-                    Resume Receiving from {{todayDate}}
+                    Resume Receiving History
                 </template>
                 <template #content>
                     <DataTable 
                         v-model:filters="filtersResume" 
-                        :value="receiveListPerDate" 
+                        :value="receiveListPerDate"
+                        options="small"
                         paginator 
                         :rows="10" 
                         dataKey="follow_number"
-                        :globalFilterFields="['boutiques.name','receive.customer.name','receive.shipper.name','receive.user.employee.names']"
+                        :globalFilterFields="['receive.follow_number','boutiques.name','receive.customer.name','receive.shipper.name','receive.user.employee.names']"
                     >
                         <template #header>
                             <div class="grid">
-                                <div class="col-4 md:col-12 m-0 p-1">
+                                <div class="col-12 md:col-6 m-0 p-1">
                                     <span class="p-input-icon-left">
                                         <i class="pi pi-search"/>
-                                        <InputText v-model="filtersResume['global'].value" placeholder="Keyword search" class="w-15rem"/>
+                                        <InputText v-model="filtersResume['global'].value" placeholder="Keyword search" class="w-full"/>
                                     </span>
                                 </div>
-                                <div class="col-8 md:col-12 m-0 p-1">
+                                <div class="col-12 md:col-6 m-0 p-1">
                                     <MultiSelect 
                                         :modelValue="selectColumns" 
                                         :options="columns" 
@@ -449,7 +479,20 @@
                         <Column field="boutiques.name" header="Boutiques"></Column>
                         <Column field="boxes.describe" header="Product"></Column>
                         <Column field="quantity_box" header="Qntity" class="text-center"></Column>
+                        <Column field="receive.created_at" header="Date" :sortable="true">
+                            <template #body="slotProps">
+                                {{ formatDate(slotProps.data.created_at) }}
+                            </template>
+                        </Column>
                         <Column v-for="(col,index) of selectColumns" :field="col.field" :header="col.header" :key="col.field+'_'+index"></Column>
+                        <Column header="Actions">
+                            <template #body="{data}">
+                                <span class="p-buttonset">
+                                    <Button label="Print" size="small" severity="info" icon="pi pi-print" :value="data"/>
+                                    <Button label="Delete" size="small" severity="danger" icon="pi pi-trash" @click="showDeleteReceive(data.receive.id_receive)"/>
+                                </span>
+                            </template>
+                        </Column>
                     </DataTable>
                 </template>
             </Card>
