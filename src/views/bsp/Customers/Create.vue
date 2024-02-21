@@ -12,6 +12,7 @@
     const pickUpOptions = ref([]);
     const showUpsAccount = ref(false);
     const countIn = ref(0);
+    const messageService = new MessageService();
     
     onMounted( async ()=> {
         const pickupcompanyservice = new PickUpCompaniesService();
@@ -20,21 +21,25 @@
     });
     
     const formCreateCustomer = reactive({
-        name: '',
+        name: null,
         pickUpCompanyId: null,
-        upsNumberAccount:'',
+        upsNumberAccount: null,
+        g_contact_name: null,
+        g_phone: null,
+        g_email: null,
+        g_reemail: null,
         boutiques: [
             {
-                name:'',
-                address:'',
-                city:'',
-                final_destination:'',
+                name: null,
+                address: null,
+                city: null,
+                final_destination: null,
                 contacts:[
                     {
-                        contact_name:'',
-                        phone: '',
-                        email:'',
-                        reemail:''
+                        contact_name: null,
+                        phone: null,
+                        email: null,
+                        reemail: null
 
                     }
                 ]
@@ -46,6 +51,10 @@
        name: { required, minLength: minLength(3), maxLength: maxLength(50)},
        pickUpCompanyId: { required,numeric },
        upsNumberAccount: { numeric },
+       g_contact_name: { required,minLength: minLength(4), maxLength: maxLength(50) },
+       g_phone: { required},
+       g_email: { required, email },
+       g_reemail: { required, email },
        boutiques:{
            $each: helpers.forEach({
                 name: { required, minLength: minLength(3), maxLength: maxLength(50) },
@@ -102,15 +111,27 @@
         formCreateCustomer.boutiques[numBoutique].final_destination = formCreateCustomer.boutiques[numBoutique].address;
     }
     
+    function sameGeneralContact(numBoutique,numContact){
+        console.log(numBoutique,numContact)
+        if(formCreateCustomer.g_contact_name == null || formCreateCustomer.g_phone == null || formCreateCustomer.g_email == null || formCreateCustomer.g_reemail == null){
+            messageService.errorMessageSimple("Please fill all the inputs for the contact general information","Got it!");
+        }else{
+            Object.assign(formCreateCustomer.boutiques[numBoutique].contacts[numContact],{
+                contact_name: formCreateCustomer.g_contact_name,
+                phone: formCreateCustomer.g_phone,
+                email: formCreateCustomer.g_email,
+                reemail: formCreateCustomer.g_reemail
+            });            
+        }
+    }
+    
     function addFormBoutiqueContact(cContact){
-        console.log(formCreateCustomer.boutiques[cContact].contacts);
         formCreateCustomer.boutiques[cContact].contacts.push({
             contact_name:'',
             phone: '',
             email:'',
             reemail:''
         });
-        console.log(formCreateCustomer);
     }
     
     function removeFormBoutiqueConatct(cBoutique,cContact){
@@ -120,7 +141,6 @@
     }
     
     async function createCustomer(){
-        const messageService = new MessageService();
         try{
             const validationCustomer = await valCosCreate$.value.$validate();
             const customerservice = new CustomerService();
@@ -148,7 +168,6 @@
                 ]  
             });
         }catch(e){
-            console.log(e)
             messageService.errorMessage(e);
         }
     }
@@ -197,12 +216,58 @@
                         <label for="inpCustomerUpsAccount" :class="{'p-error': valCosCreate$.upsNumberAccount.$error}">UPS Account:</label>
                         <InputText 
                             id="inpCustomerUpsAccount" 
-                            type="text" 
                             v-model="formCreateCustomer.upsNumberAccount" 
                             aria-describedby="inpCustomerUpsAccount-help" 
                             :class="{'p-invalid': valCosCreate$.upsNumberAccount.$error}"
                         />
                         <small id="inpCustomerUpsAccount-help" class="p-error" v-if="valCosCreate$.upsNumberAccount.$error">{{ valCosCreate$.upsNumberAccount.$errors[0].$message }}</small>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <h5>Contact Information</h5>
+                        <Divider/>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="inpContactName" :class="{'p-error': valCosCreate$.g_contact_name.$error}">Names:</label>
+                        <InputText 
+                            v-model="formCreateCustomer.g_contact_name"
+                            id="inpContactName"
+                            aria-describedby="inpContactName-help"
+                            :class="{'p-invalid': valCosCreate$.g_contact_name.$error}"
+                        />
+                        <small id="inpContactName-help" class="p-error" v-if="valCosCreate$.g_phone.$error">{{ valCosCreate$.g_phone.$errors[0].$message }}</small>
+                    </div>
+                    <div class="field col-12 md:col-6">
+                        <label for="inpContactPhone">Phone:</label>
+                        <InputText  
+                            v-model="formCreateCustomer.g_phone"
+                            id="inpContactPhone"
+                            aria-describedby="inpContactPhone-help"
+                            :class="{'p-invalid': valCosCreate$.g_phone.$error}"
+                        />
+                        <small id="inpContactPhone-help" class="p-error" v-if="valCosCreate$.g_phone.$error">{{ valCosCreate$.g_phone.$errors[0].$message }}</small>
+                    </div>
+                    <div class="field col-12">
+                        <label for="inpContactEmail" :class="{'p-error': valCosCreate$.g_email.$error}">Email:</label>
+                        <InputText  
+                            type="text" 
+                            v-model="formCreateCustomer.g_email"
+                            id="inpContactEmail"
+                            aria-describedby="inpContactEmail-help"
+                            :class="{'p-invalid': valCosCreate$.g_email.$error}"
+                        />
+                        <small id="inpContactEmail-help" class="p-error" v-if="valCosCreate$.g_email.$error">{{ valCosCreate$.g_email.$errors[0].$message }}</small>
+                    </div>
+                    <div class="field col-12">
+                        <label for="inpContactReEmail" :class="{'p-error': valCosCreate$.g_reemail.$error}">Verify the Email:</label>
+                        <InputText  
+                            type="text" 
+                            v-model="formCreateCustomer.g_reemail"
+                            id="inpContactReEmail"
+                            aria-describedby="inpContactReEmail-help"
+                            :class="{'p-invalid': valCosCreate$.g_reemail.$error}"
+                            @paste.prevent
+                        />
+                        <small id="inpContactReEmail-help" class="p-error" v-if="valCosCreate$.g_reemail.$error">{{ valCosCreate$.g_reemail.$errors[0].$message }}</small>
                     </div>
                 </div>
             </template>
@@ -244,7 +309,7 @@
                                     />                                                
                                 </div>
                                 <div class="field col-12">
-                                    <label>Final destination:</label> <Tag class="mr-2 cursor-pointer" severity="warning" @click="sameAddress(cB)">Same address</Tag>
+                                    <label>Final destination:</label> <Tag class="mr-2 cursor-pointer" severity="secondary" @click="sameAddress(cB)">Same address</Tag>
                                     <InputText  
                                         id=""
                                         type="text" 
@@ -265,6 +330,7 @@
                                                             <Button icon="pi pi-trash" class="ml-3" @click="removeFormBoutiqueConatct(cB,cC)" severity="danger" text rounded/>
                                                         </div>
                                                     </template>
+                                                    <Tag class="mr-2 cursor-pointer" severity="secondary" @click="sameGeneralContact(cB,cC)">Same general contact</Tag></br>
                                                     <div class="p-fluid formgrid grid">
                                                         <div class="field col-12 md:col-6">
                                                             <label>Names:</label>

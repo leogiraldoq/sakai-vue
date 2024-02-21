@@ -7,7 +7,7 @@
 
     import ShippersService from '@/service/ShippersService';
     import CustomerService from '@/service/CustomerService';
-    import BoxesService from '@/service/BoxesService';
+    import ProductsService from '@/service/ProductsService';
     import ReceiveService from '@/service/ReceiveService';
     import MessageService from '@/service/MessageService';
 
@@ -23,6 +23,7 @@
        receive:[
            {
                 boutique: null,
+                product:null,
                 box: null,
                 quantity: 0,
                 weight: 0,
@@ -43,6 +44,9 @@
     const customerItems = ref();
     const boutiquesOptions = ref([]);
     const boutiquesItems = ref([]);
+    const prodOptions = ref([]);
+    const prodItems = ref([]);
+
     const boxesOptions = ref([]);
     const boxesItems = ref([]);
     const loadingCreate = ref(false);
@@ -66,14 +70,14 @@
     const receiveService = new ReceiveService();
     const messageService = new MessageService();
     const shipperService = new ShippersService();
+    const productService = new ProductsService();
     const customerService = new CustomerService();
-    const boxService = new BoxesService();
     const boutiqueOne = ref(null);
     
     onMounted(async () => {
        await shipperService.getAll().then((res) => ( shippersOptions.value = res.data ));   
        await customerService.getCustomerAndBoutique().then((res) => (customerOptions.value = res.data));
-       await boxService.listAll().then((res) => (boxesOptions.value = res.data));
+       await productService.showWithBoxAuto().then((res) => (prodOptions.value = res.data));
        await receiveService.queryDetailsAll(moment().format('YYYY-M-D')).then((list) => (receiveListPerDate.value = list.data));
        todayDate.value = moment().format('MMMM Do YYYY');
        initCamera();
@@ -110,6 +114,11 @@
         }
         itsProcess();
     }
+    
+    function bringBox(cP){
+        console.log(formReceive.receive[cP].product.boxes)
+        boxesOptions.value = formReceive.receive[cP].product.boxes;
+    }
 
     const searchBoutiques = (event) => {
         setTimeout(() =>{
@@ -120,7 +129,19 @@
                     return boutique.name.toLowerCase().startsWith(event.query.toLowerCase());
                 });
             }
-        },250);
+        },100);
+    }
+    
+    const searchProd = (event) =>{
+        setTimeout(() =>{
+            if(!event.query){
+                prodItems.value = [...prodOptions.value];
+            }else{
+                prodItems.value = prodOptions.value.filter((product) =>{
+                   return product.name.toLowerCase().startsWith(event.query.toLowerCase()); 
+                });
+            }
+        },100);
     }
     
     const searchBox = (event) =>{
@@ -129,10 +150,10 @@
                 boxesItems.value = [...boxesOptions.value];
             }else{
                 boxesItems.value = boxesOptions.value.filter((box) =>{
-                   return box.describe.toLowerCase().startsWith(event.query.toLowerCase()); 
+                   return box.dimensions.toLowerCase().startsWith(event.query.toLowerCase()); 
                 });
             }
-        },250);
+        },100);
     }
     
     function addReceiveBox(c){
@@ -162,6 +183,7 @@
             let resReceive = await receiveService.create(formReceive);
             createReceive.action = "create";
             createReceive.ticket = resReceive.data.ticket;
+            console.log(createReceive.ticket);
             receiveListPerDate.value.push(resReceive.data.resume[0]);
             await messageService.successMessageSimple(resReceive.message,"Ok!");
             Object.assign(formReceive,{
@@ -358,10 +380,11 @@
                                         <p>Details Receive</p>
                                         <table>
                                             <tr>
-                                                <th style="width: 10%;">#</th>
-                                                <th style="width: 15%;">Quantity</th>
-                                                <th style="width: 20%;">Package</th>
-                                                <th style="width: 40%;">Boutique</th>
+                                                <th style="width: 5%;">#</th>
+                                                <th style="width: 10%;">Quantity</th>
+                                                <th style="width: 20%;">Product</th>
+                                                <th style="width: 20%;">Size</th>
+                                                <th style="width: 30%;">Boutique</th>
                                                 <th style="width: 15%;">WT (Lbs)</th>
                                                 <th></th>
                                             </tr>
@@ -376,9 +399,18 @@
                                                 </td>
                                                 <td>
                                                     <AutoComplete 
+                                                        v-model="receive.product" 
+                                                        :suggestions="prodItems"
+                                                        optionLabel="name"
+                                                        @complete="searchProd"
+                                                        @item-select="bringBox(cR)"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <AutoComplete 
                                                         v-model="receive.box" 
                                                         :suggestions="boxesItems"
-                                                        optionLabel="describe"
+                                                        optionLabel="dimensions"
                                                         aria-describedby="acBoxes-help"
                                                         @complete="searchBox"
                                                     />
@@ -406,7 +438,7 @@
                                         </table>
                                         <div class="field col-12 mt-3">
                                             <label id="txtObservations">Observations:</label>
-                                            <Textarea v-model="formReceive.observations" rows="3" cols="20" />
+                                            <Textarea v-model="formReceive.observations" rows="3" cols="20" tabindex="-1"/>
                                         </div>
                                     </div>
                                 </div>
@@ -418,8 +450,8 @@
                                     </transition-group>
                                 </div>
                                 <div class="col-12 mt-3">
-                                    <video id="video" v-show="showVideo" style="width: 100%">Video stream not available.</video>
-                                    <canvas id="canvas" v-show="showCanvas"></canvas>
+                                    <video id="video" v-show="showVideo" style="width: 100%" tabindex="-1">Video stream not available.</video>
+                                    <canvas id="canvas" v-show="showCanvas" tabindex="-1"></canvas>
                                     <Button id="startbutton" icon="pi pi-camera" label="Take photo"  severity="help" class="w-full"/>
                                 </div>
                                 <div class="col-12 mt-2">

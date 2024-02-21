@@ -8,7 +8,6 @@ export default class QrService{
                     'Accept': 'application/json'
                 }
             });
-            console.log(await resultQr);
             if(resultQr.ok){
                 return await resultQr.json();
             }
@@ -17,6 +16,21 @@ export default class QrService{
         
         async readQrProcessing(code){
             const resultQr = await fetch( import.meta.env.VITE_API_URL + '/qr-code/processing/show/info/' + code,{
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer '+localStorage.getItem("token"),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            if(resultQr.ok){
+                return await resultQr.json();
+            }
+            throw resultQr;
+        }
+        
+        async readQrQuality(code){
+            const resultQr = await fetch( import.meta.env.VITE_API_URL + '/qr-code/quality/show/info/' + code,{
                 method: "GET",
                 headers: {
                     'Authorization': 'Bearer '+localStorage.getItem("token"),

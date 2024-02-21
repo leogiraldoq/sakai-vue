@@ -39,7 +39,7 @@
 
     const messageQr = ref([]);
     async function onDecodeBspQr(qrData){
-        try {
+        //try {
             showCamera.value = false;
             const resultQr = await qrService.readQrPreBill(qrData);
             if(resultQr.data){
@@ -50,7 +50,7 @@
                     formInvoice.receiveDetailId = qrRead.id_receive_details;                    
                 }else{
                     messageQr.value=[
-                        { severity: 'error', content: "The customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> NOT has intructions created. Pleas contact the manager.", id: 1}
+                        { severity: 'error', content: "The customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> NOT has intructions created. Please contact the manager.", id: 1}
                     ];
                 }
             }else{
@@ -58,9 +58,10 @@
                     { severity: 'error', content: "The Qr that you read its wrong", id: 1}
                 ];
             }
-        } catch (e) {
+        /*} catch (e) {
+            console.log(e)
             msgService.errorMessage(e)
-        }
+        }*/
     }
     
     function displayCamera(){
@@ -166,11 +167,11 @@
                             <InputText size="large" disabled v-model="qrRead.box_quantity"/>
                         </div>
                         <div class="field col-12 md:col-3">
-                            <label>Type:</label>
+                            <label>Product:</label>
                             <InputText size="large" disabled v-model="qrRead.box_type"/>
                         </div>
                         <div class="field col-12 md:col-3">
-                            <label>Dimension:</label>
+                            <label>Size:</label>
                             <InputText size="large" disabled v-model="qrRead.box_dimensions"/>
                         </div>
                         <div class="field col-12 md:col-2">

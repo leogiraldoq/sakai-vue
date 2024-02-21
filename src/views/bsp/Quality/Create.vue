@@ -1,18 +1,124 @@
 <script setup>
     import { ref, reactive } from 'vue';
     import { StreamBarcodeReader } from 'vue-barcode-reader';
+    
     import QrService from '@/service/QrService';
     import MessageService from '@/service/MessageService';
-
+    import QualityService from '@/service/QualityService';
+    
+    const msgService = new MessageService();
+    const qualityService = new QualityService();
+    const qrService = new QrService();
+    
     const showCamera = ref(false);
     const showInstructions = ref(false);
-    const saveButtonDisabled = ref(false);
     const showResultQr = ref(false);
-    
-    
-    
-</script>
+    const showFormQuality = ref(true);
+    const optionsQuality = ref([
+        { name: 'Not Aprove', value: false},
+        { name: 'Aprove', value: true},
+    ]);
+    const formQuality = reactive({
+        idReceiveDetails: null,
+        qualityControl:[],
+    });
+    const qrRead = reactive({
+        received_date : null,
+        follow_number: null,
+        customer: null,
+        boutique: null,
+        store: null,
+        box_type: null,
+        box_dimensions: null,
+        box_quantity: null,
+        box_weight: null,
+        receibed_by: null,
+        id_receive_details: null,
+        instructions: null,
+        invoiceNum: null,
+        invoiceTotal: null,
+        preBillId: null,
+        processing: null,
+        whoami: null
+    });
 
+    function displayCamera(){
+        showCamera.value = true;
+        messageQr.value = null;
+    }
+    
+    const messageQr = ref([]);
+    const messageQuality = ref([]);
+    async function onDecodeBspQr(qrData){
+       try {
+            showCamera.value = false;
+            const resultQr = await qrService.readQrQuality(qrData);
+            console.log(resultQr);
+            if(resultQr.data){
+                if(resultQr.data.processing.process){
+                    messageProcess.value=[
+                        { severity: 'error', content: "This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS PROCESSING. Please contact the manager.", id: 1}
+                    ];
+                    showResultQr.value = true;
+                    showResumeProcess.value = true;
+                    Object.assign(qrRead,resultQr.data)
+                    showFormQuality.value = false;
+                }else{
+                    showResultQr.value = true;
+                    Object.assign(qrRead,resultQr.data)
+                }
+            }else{
+                messageQr.value=[
+                    { severity: 'error', content: "The Qr that you read its corrupt", id: 1}
+                ];
+            }
+        } catch (e) {
+            console.log(e)
+            msgService.errorMessage(e)
+        }
+    }
+    
+    function valueFromQuality(c){
+        formQuality.push({
+            idRceiveDetail: qrRead.id_receive_details,
+            idProcess: qrRead.processing.resume[c].idProcess,
+            quality: qrRead.processing.resume[c].q,
+        });
+    }
+    
+    async function saveFormQuality(){
+        try {
+            if(formQuality.length !== qrRead.processing.resume.length){
+                msgService.errorMessageSimple("You dont aprove all the styles process","Got it!");
+                return;
+            }
+            const quality = await qualityService.create(formProcessing);
+            msgService.successMessageSimple(quality.message,"Ok!");
+            Object.assign(formQuality,[]);
+            Object.assign(qrRead,{
+                received_date : null,
+                follow_number: null,
+                customer: null,
+                boutique: null,
+                store: null,
+                box_type: null,
+                box_dimensions: null,
+                box_quantity: null,
+                box_weight: null,
+                receibed_by: null,
+                id_receive_details: null,
+                instructions: null,
+                invoiceNum: null,
+                invoiceTotal: null,
+                preBillId: null,
+                processing: null,
+                whoami: null
+            });
+        } catch (e) {
+            msgService.errorMessage(e)
+        }
+    }
+</script>
 <template>
     <div class="grid">
         <div class="col-12">
@@ -37,32 +143,40 @@
                             <h5>General Information</h5>
                             <div class="p-fluid formgrid grid">
                                 <div class="col-12 md:col-6">
-                                    <div class="field col-12">
-                                        <label for="idCustomer">Customer:</label>
-                                        <InputText v-model="qrRead.customer" id="idCustomer" disabled size="large"/>
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Customer:</span>
+                                        <p class="text-xl text-900">{{qrRead.customer}}</p>
                                     </div>
-                                    <div class="field col-12">
-                                        <label>Boutique:</label>
-                                        <InputText v-model="qrRead.boutique" disabled size="large"/>
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Boutique:</span>
+                                        <p class="text-xl text-900">{{qrRead.boutique}}</p>
                                     </div>
-                                    <div class="field col-12">
-                                        <label>Store:</label>
-                                        <InputText v-model="qrRead.store" disabled size="large"/>                                
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Store:</span>
+                                        <p class="text-xl text-900">{{qrRead.store}}</p>
                                     </div>
-                                    <div class="field col-12">
-                                        <label>Invoice Number:</label>
-                                        <InputText v-model="qrRead.invoiceNum" disabled size="large"/>                                
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Receiving:</span>
+                                        <p class="text-xl text-900">{{qrRead.box_quantity}} Box(es), product {{qrRead.box_type}} ({{qrRead.box_dimensions}}), weight {{qrRead.box_weight}} lbs</p>
                                     </div>
-                                    <div class="field col-12">
-                                        <label>Total pieces:</label>
-                                        <InputText v-model="qrRead.total" disabled size="large"/>                                
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Receiving by:</span>
+                                        <p class="text-xl text-900">{{qrRead.receibed_by}}</p>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Invoice Number:</span>
+                                        <p class="text-xl text-900">{{qrRead.invoiceNum}}</p>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Total pieces Invoice:</span>
+                                        <p class="text-xl text-900">{{qrRead.invoiceTotal}} pieces</p>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <span class="text-m">Total pieces Processed:</span>
+                                        <p class="text-xl text-900">{{qrRead.processing.total}} pieces</p>
                                     </div>
                                 </div>
-                               <div class="col-6">
-                                    <div class="field col-12">
-                                        <label id="inpQntyLabels">Labels you have:</label>
-                                        <InputNumber v-model="qrRead.labels" id="inpQntyLabels" size="large"/>
-                                    </div>
+                                <div class="col-6">
                                     <div class="field col-12" v-if="qrRead.instructions !== null">
                                         <label>Sample:</label><br/>
                                         <Image :src="qrRead.instructions.sampleImage" width="100%" preview/>
@@ -71,68 +185,58 @@
                                 </div>
                             </div>
                         </div>
-                        <Divider />
-                        <div class="col-12 grid">
-                            <div class='col-12 md:col-6'>
-                                <h5>Processing by <b>{{ qrRead.whoami }}</b></h5>
-                            </div>
-                            <div class="col-12 md:col-6">
-                                <div class="flex align-content-center">
-                                    <ToggleButton 
-                                        v-model="formProcessing.shareWork" 
-                                        onLabel="Work share" 
-                                        onIcon="pi pi-users"
-                                        offLabel="No work share"
-                                        offIcon="pi pi-user"
-                                    />
+                    </div>    
+                </template>
+            </Card>
+                        
+            <Card class="mt-2" v-if="showResultQr">
+                <template #title>Process quality by <b>{{ qrRead.whoami }}</b></template>
+                <template #content>
+                    <div class="col-12">
+                        <transition-group tag="div">
+                            <Message v-for="msg of messageQuality" :severity="msg.severity" :key="msg.id" :closable="false">{{ msg.content }}</Message>
+                        </transition-group>
+                    </div>
+                    <div class="grid">
+                        <div class="col-12">
+                            <table class="w-full">
+                                <tr>
+                                    <th>Style Id</th>
+                                    <th>Pieces</th>
+                                    <th>Set</th>
+                                    <th>Color</th>
+                                    <th>Share Work</th>
+                                    <th>Made for</th>
+                                    <th>Total Pieces Work</th>
+                                    <th v-if="showFormQuality">Quality</th>
+                                </tr>
+                                <tr v-for="(process, cP) in qrRead.processing.resume" :key="cP">
+                                    <td>{{process.styleId}}</td>
+                                    <td>{{process.stylePieces}}</td>
+                                    <td>{{process.styleSet}}</td>
+                                    <td>{{process.styleColor}}</td>
+                                    <td>{{process.workShare}}</td>
+                                    <td>{{process.madeFor}}</td>
+                                    <td>{{process.total}}</td>
+                                    <td v-if="showFormQuality">
+                                        <SelectButton v-model="process.q" :options="optionsQuality" optionLabel="name" optionValue="value" @change="valueFromQuality(cP)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="col-12 align-content-end align-items-end" style="text-align: right;">
+                                <div>
+                                    <h5> Total: <b>{{ qrRead.processing.total }} Pieces Worked</b> </h5>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
-                        <form class="p-fluid formgrid grid">
-                            <template v-for="(style, i) in formProcessing.stylesProcess" :key="i">
-                                    <div class="col-12 md:col-2">
-                                        <p class="text-xl" style="{vertical-align: center;}">Style # {{ i +1 }}:</p>
-                                    </div>
-                                    <div class="field col-12 md:col-2">
-                                        <label for="inpStyleId">Style Id:</label>
-                                        <InputText v-model="style.id" id="inpStyleId" />
-                                    </div>
-                                    <div class="field col-12 md:col-2" v-if="formProcessing.shareWork">
-                                        <label for="autoColor">Color:</label>
-                                        <AutoComplete 
-                                            id="autoColor"
-                                            v-model="style.color"
-                                            :suggestions="colorsItems"
-                                            optionLabel="name"
-                                            dropdown
-                                            @complete="searchColors"
-                                        />
-                                    </div>
-                                    <div class="field col-12 md:col-2">
-                                        <label for="inpTotal">Process pieces:</label>
-                                        <InputNumber v-model="style.quantity" id="inpTotal"/>
-                                    </div>
-                                    <div class="col-12 md:col-3">
-                                        <Button icon="pi pi-trash" label="Remove" @click="removeFormStyle(i)" severity="danger" outlined/>
-                                    </div>
-                                <Divider />
-                            </template>
-                            <div class="col-12 align-content-end">
-                                <div class="col-12 md:col-4">
-                                    <Button icon="pi pi-plus" label="Add style" @click="addFormStyle()" severity="success" outlined/>
-                                </div>
-                            </div>
-                        </form>
+                        <div class="col-12 mt-5">
+                            <Button icon="pi pi-save" label="Save quality" @click="saveFormQuality()" severity="success" class="w-full" v-if="showFormQuality"/>
                         </div>
                     </div>
                 </template>
-                <template #footer v-if="showResultQr">
-                    <Button icon="pi pi-save" label="Save" @click="saveFormStyle()" severity="success" class="w-full"/>
-                </template>
             </Card>
         </div>
-    </div>
+    </div>    
     <Dialog v-model:visible="showCamera" modal header="Camera" position="bottom" :style="{ width: '70vw' }">
         <StreamBarcodeReader @decode="onDecodeBspQr"></StreamBarcodeReader>
     </Dialog>
@@ -188,3 +292,26 @@
         </template>
     </Dialog>
 </template>
+
+<style scoped>
+    table, td, th {
+        border: 2px solid #000000;
+        text-align: center;
+    }
+
+    td{
+        font-size: 18px;
+        padding: 10px;
+    }
+    
+    th {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #bfbfbf;
+        color: black;
+    }
+    
+    table {
+        border-collapse: collapse;
+    }
+</style>

@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, reactive, onMounted, defineEmits } from 'vue';
+    import { ref, reactive, onMounted } from 'vue';
     import moment from 'moment';
     
     import { jsPDF } from "jspdf";
@@ -36,7 +36,7 @@
     async function createTicketToPrint(){
         await domtoimage.toPng(ticketToPrint.value).then((imageData) => {
             const pdf = new jsPDF("p","in",[4,11]);
-            pdf.addImage(imageData,"PNG",0.5,0.05,4,11);
+            pdf.addImage(imageData,"PNG",0.3,0.05,4,11);
             var pdfOut = pdf.output('blob');
             var reader = new FileReader();
             reader.onloadend = () => {
@@ -99,7 +99,7 @@
 </script>
 
 <template>
-    <div class="grid justify-content-center align-items-center text-black text-xs" ref="ticketToPrint" id="ticketToPrint">
+    <div class="grid justify-content-center align-items-center ticketFont" ref="ticketToPrint" id="ticketToPrint">
         <div class="col-12" v-show="showDelete"><h5 style="color: #ff0000">This is the receive that you want to delete?</h5></div>
         <div class="col-12 text-center">
             <img src="/layout/images/logoBlueStarPacking.png" alt="Blue Star Packing" class="w-10"/>
@@ -112,7 +112,7 @@
                 <b>Customer:</b> {{ticket.customer.name}}<br/>
                 <b>Date receive:</b> {{parseDate(ticket.created_at)}}</p>
             <p>Resume receive:</p>
-            <table class="text-center text-sm mb-2 ml-1">
+            <table class="text-center mb-2 ml-1 ticketFont">
                 <tr>
                     <th>Boutique</th>
                     <th>Quant</th>
@@ -123,13 +123,13 @@
                 <tr v-for="(resume,tR) in ticket.receive_details" :key="tR">
                     <td>{{resume.boutiques.name}}</td>
                     <td>{{resume.quantity_box}}</td>
-                    <td>{{resume.boxes.describe}}</td>
+                    <td>{{resume.boxes.products.name}}</td>
                     <td>{{resume.boxes.dimensions}}</td>
                     <td>{{resume.weight_box}}</td>
                 </tr>
             </table>
             <p><b>Received By:</b> {{ticket.user.employee.names}}</p>
-            <p class="text-sm"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
+            <p class="ticketFont"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
         </div>
         <div class="col-12" v-show="showDelete">
             <Button label="Yes Delete" size="small" severity="danger" icon="pi pi-trash" class="w-full" @click="yesDelete(ticket.id_receive)"/>
@@ -158,8 +158,14 @@
 </template>
 
 <style scoped>
+    
+    
     table,tr,th,td{
         border: 1px solid black;
         border-collapse: collapse;
     }
+    .ticketFont {
+        font-size: 10px;
+    }
+
 </style>

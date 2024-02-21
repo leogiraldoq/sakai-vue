@@ -13,7 +13,7 @@ const model = ref([
                 to: '/dashboard' 
             },
             {
-                label: 'Recibing',
+                label: 'Receiving',
                 icon: 'pi pi-fw pi-shopping-bag',
                 to: '/bsp/receiving/create'
             },
@@ -38,6 +38,11 @@ const model = ref([
                 items: [
                     { label: 'Control', icon: 'pi pi-fw pi-history', to: '/bsp/quality/create'},
                 ]
+            },
+            {
+                label: 'Send',
+                icon: 'pi pi-fw pi-truck',
+                to: '/bsp/send/create'
             }
         ]
     },

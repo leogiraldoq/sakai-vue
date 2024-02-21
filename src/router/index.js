@@ -164,8 +164,16 @@ const router = createRouter({
                 },
                 {
                     path: '/bsp/quality/create',
-                    name: 'qualiyu',
+                    name: 'quality',
                     component: () => import('@/views/bsp/Quality/Create.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/send/create',
+                    name: 'send',
+                    component: () => import('@/views/bsp/Send/Create.vue'),
                     meta:{
                         isAuth:true
                     }
