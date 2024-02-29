@@ -45,4 +45,20 @@ export default class UsersService{
         }
         throw resLogOut;
      }
+     
+     async me(){
+         const resMe = await fetch(import.meta.env.VITE_API_URL + '/auth/me',{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if(resMe.ok){
+            return await resMe.json();
+        }
+        throw resMe;
+     }
+     
 }

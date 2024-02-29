@@ -1,4 +1,4 @@
-export default class ProfilesModules{
+export default class ProfilesModulesService{
         
    async getAllProfiles(){
         const listProfiles = await fetch(import.meta.env.VITE_API_URL+'/profile/list-all',{
@@ -53,6 +53,17 @@ export default class ProfilesModules{
             return await createProfile.json();
         }
         throw createProfile;
+    }
+    
+    async getModuleUsers(module){
+        const usersProfile = await fetch(import.meta.env.VITE_API_URL + '/profile/show/users/module/'+module,{
+            'Authorization': 'Bearer '+localStorage.getItem("token"),
+            'Accept': 'application/json'
+        });
+        if (usersProfile.ok){
+            return await usersProfile.json();
+        }
+        throw usersProfile;
     }
 }
 

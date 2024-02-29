@@ -59,7 +59,7 @@ const collapseAll = () => {
                                         {{ slotProps.data.module_name }}
                                     </template>
                                 </Column>
-                                <Column field="create" header="Create" class="text-center">
+                                <Column field="create" header="Create">
                                     <template #body="slotProps">
                                         <slot v-if='slotProps.data.pivot.create == 1'>
                                             <i class="pi pi-check-circle text-green-900"></i>
@@ -69,7 +69,7 @@ const collapseAll = () => {
                                         </slot>
                                     </template>
                                 </Column>
-                                <Column field="update" header="Update" class="text-center">
+                                <Column field="update" header="Update">
                                     <template #body="slotProps">
                                         <slot v-if='slotProps.data.pivot.update == 1'>
                                             <i class="pi pi-check-circle text-green-900"></i>
@@ -79,7 +79,7 @@ const collapseAll = () => {
                                         </slot>
                                     </template>
                                 </Column>
-                                <Column field="read" header="Read" class="text-center">
+                                <Column field="read" header="Read">
                                     <template #body="slotProps">
                                         <slot v-if='slotProps.data.pivot.read == 1'>
                                             <i class="pi pi-check-circle text-green-900"></i>
@@ -89,7 +89,7 @@ const collapseAll = () => {
                                         </slot>
                                     </template>
                                 </Column>
-                                <Column field="delete" header="Delete" class="text-center">
+                                <Column field="delete" header="Delete">
                                     <template #body="slotProps">
                                         <slot v-if='slotProps.data.pivot.delete == 1'>
                                             <i class="pi pi-check-circle text-green-900"></i>

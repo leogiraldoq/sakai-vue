@@ -1,6 +1,7 @@
 <script setup>
     import { ref, reactive } from 'vue';
     import { StreamBarcodeReader } from 'vue-barcode-reader';
+    import moment from 'moment';
     
     import QrService from '@/service/QrService';
     import MessageService from '@/service/MessageService';
@@ -15,11 +16,11 @@
     const showResultQr = ref(false);
     const showFormQuality = ref(true);
     const optionsQuality = ref([
-        { name: 'Not Aprove', value: false},
-        { name: 'Aprove', value: true},
+        { name: 'Not Aprove', value: 0},
+        { name: 'Aprove', value: 1},
     ]);
     const formQuality = reactive({
-        idReceiveDetails: null,
+        idRceiveDetail: null,
         qualityControl:[],
     });
     const qrRead = reactive({
@@ -45,6 +46,11 @@
     function displayCamera(){
         showCamera.value = true;
         messageQr.value = null;
+        showInstructions.value = false;
+        showResultQr.value = false;
+        showFormQuality.value = true;
+        messageQr.value = [];
+        messageQuality.value = [];
     }
     
     const messageQr = ref([]);
@@ -53,25 +59,33 @@
        try {
             showCamera.value = false;
             const resultQr = await qrService.readQrQuality(qrData);
-            console.log(resultQr);
             if(resultQr.data){
                 if(resultQr.data.processing.process){
-                    messageProcess.value=[
+                    messageQuality.value=[
                         { severity: 'error', content: "This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS PROCESSING. Please contact the manager.", id: 1}
                     ];
                     showResultQr.value = true;
-                    showResumeProcess.value = true;
+                    Object.assign(qrRead,resultQr.data)
+                    showFormQuality.value = false;
+                }else if(resultQr.data.quality.length > 0){
+                    let dateQuality = formatDate(resultQr.data.quality[0].created_at)
+                    messageQuality.value=[
+                        { severity: 'error', content: "The order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" has already gone in "+dateQuality+" through the process quality. Please contact the manager.", id: 1}
+                    ];
+                    showResultQr.value = true;
                     Object.assign(qrRead,resultQr.data)
                     showFormQuality.value = false;
                 }else{
                     showResultQr.value = true;
                     Object.assign(qrRead,resultQr.data)
+                    showFormQuality.value = true;
                 }
             }else{
                 messageQr.value=[
                     { severity: 'error', content: "The Qr that you read its corrupt", id: 1}
                 ];
             }
+            console.log(qrRead)
         } catch (e) {
             console.log(e)
             msgService.errorMessage(e)
@@ -79,20 +93,29 @@
     }
     
     function valueFromQuality(c){
-        formQuality.push({
-            idRceiveDetail: qrRead.id_receive_details,
-            idProcess: qrRead.processing.resume[c].idProcess,
-            quality: qrRead.processing.resume[c].q,
-        });
+        formQuality.idRceiveDetail = qrRead.id_receive_details;
+        if(formQuality.qualityControl[c]){
+            formQuality.qualityControl[c] = {
+                idProcess: qrRead.processing.resume[c].idProcess,
+                quality: qrRead.processing.resume[c].q,
+            };
+
+        }else{
+            formQuality.qualityControl.push({
+                idProcess: qrRead.processing.resume[c].idProcess,
+                quality: qrRead.processing.resume[c].q,
+            });            
+        }
+        console.log(formQuality)
     }
     
     async function saveFormQuality(){
         try {
-            if(formQuality.length !== qrRead.processing.resume.length){
+            if(formQuality.qualityControl.length !== qrRead.processing.resume.length){
                 msgService.errorMessageSimple("You dont aprove all the styles process","Got it!");
                 return;
             }
-            const quality = await qualityService.create(formProcessing);
+            const quality = await qualityService.create(formQuality);
             msgService.successMessageSimple(quality.message,"Ok!");
             Object.assign(formQuality,[]);
             Object.assign(qrRead,{
@@ -114,9 +137,16 @@
                 processing: null,
                 whoami: null
             });
+            showResultQr.value = false;
+            showFormQuality.value = true;
         } catch (e) {
+            console.log(e)
             msgService.errorMessage(e)
         }
+    }
+    
+    const formatDate = (date) =>{
+        return moment(date).format('MMM Do YYYY, h:mm:ss a');
     }
 </script>
 <template>
@@ -135,7 +165,7 @@
                 <template #content>
                     <div class="col-12">
                         <transition-group tag="div">
-                            <Message v-for="msg of messageQr" :severity="msg.severity" :key="msg.id" :closable="false">{{ msg.content }}</Message>
+                            <Message v-for="msg of messageQr" :severity="msg.severity" :key="msg.id" :closable="false" ><b>{{ msg.content }}</b></Message>
                         </transition-group>
                     </div>
                     <div class="grid" v-if="showResultQr">
@@ -208,6 +238,7 @@
                                     <th>Share Work</th>
                                     <th>Made for</th>
                                     <th>Total Pieces Work</th>
+                                    <th>Date</th>
                                     <th v-if="showFormQuality">Quality</th>
                                 </tr>
                                 <tr v-for="(process, cP) in qrRead.processing.resume" :key="cP">
@@ -218,6 +249,7 @@
                                     <td>{{process.workShare}}</td>
                                     <td>{{process.madeFor}}</td>
                                     <td>{{process.total}}</td>
+                                    <td>{{ formatDate(process.created_at) }}</td> 
                                     <td v-if="showFormQuality">
                                         <SelectButton v-model="process.q" :options="optionsQuality" optionLabel="name" optionValue="value" @change="valueFromQuality(cP)"/>
                                     </td>

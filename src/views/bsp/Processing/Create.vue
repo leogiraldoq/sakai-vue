@@ -51,7 +51,21 @@
 
     function displayCamera(){
         showCamera.value = true;
-        messageQr.value = null;
+        messageQr.value = [];
+        messageProcess.value = [];
+        showResultQr.value = false;
+        showResumeProcess.value = false;
+        showFormProcess.value = true;
+        Object.assign(qrRead,{
+            preBillId: null,
+            customer: null,
+            boutique: null,
+            store: null,
+            invoiceNum: null,
+            total: null,
+            instructions: null,
+            processing: null
+        });
     }
     
     const messageQr = ref([]);
@@ -72,7 +86,7 @@
                     ];
                 }else if(!resultQr.data.processing.process){
                     messageProcess.value=[
-                        { severity: 'warn', content: "This order for the customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> ITS READY FOR QUALITY REVISION. Please contact the manager.", id: 1}
+                        { severity: 'warn', content: "This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS READY FOR QUALITY REVISION. Please contact the manager.", id: 1}
                     ];
                     showResultQr.value = true;
                     showResumeProcess.value = true;
@@ -82,7 +96,6 @@
                     showResultQr.value = true;
                     saveButtonDisabled.value = false;
                     optionsAddWork.value = resultQr.data.addWork;
-                    console.log(optionsAddWork.value)
                     Object.assign(qrRead,resultQr.data)
                 }
             }else{
@@ -136,7 +149,8 @@
                         quantity: null,
                         set: 1
                     }
-                ]
+                ],
+                workAdd:[]
             });
             Object.assign(qrRead,{
                 preBillId: null,
@@ -145,12 +159,13 @@
                 store: null,
                 invoiceNum: null,
                 total: null,
-                instructions: null
+                instructions: null,
+                processing: null
             });
             saveButtonDisabled.value = true;
-
+            showResultQr.value = false;
+            showResumeProcess.value = false;
         } catch (e) {
-            console.log(e)
             msgService.errorMessage(e)
         }
     }
@@ -161,7 +176,9 @@
             <Card>
                 <template #title>
                     <div class="grid">
-                        <div class="col-12 md:col-6">Processing</div>
+                        <div class="col-12 md:col-6">
+                            Processing
+                        </div>
                         <div class="col-12 md:col-6">
                             <Button icon="pi pi-qrcode" label="Scan Qr" severity="help" @click="displayCamera" size="small" class="w-full"/>
                         </div>

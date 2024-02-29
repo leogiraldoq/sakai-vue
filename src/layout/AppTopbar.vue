@@ -33,6 +33,7 @@ const logOut = async () => {
         router.push({name: 'login'});
     }catch(err){
         msgService.errorMessage(err);
+        router.push({name: 'login'});
     }
 }
 

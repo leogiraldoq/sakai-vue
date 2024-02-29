@@ -108,15 +108,16 @@
 
     const bringBoutiques=(event)=>{
         boutiquesOptions.value = formReceive.customer.boutiques;
-        if(formReceive.customer.boutiques.length == 1){
+        if(formReceive.customer.boutiques.length === 1){
             boutiqueOne.value = formReceive.customer.boutiques[0];
             formReceive.receive[0].boutique = boutiqueOne.value;
+        }else{
+            formReceive.receive[0].boutique = null
         }
         itsProcess();
     }
     
     function bringBox(cP){
-        console.log(formReceive.receive[cP].product.boxes)
         boxesOptions.value = formReceive.receive[cP].product.boxes;
     }
 
@@ -312,7 +313,6 @@
             console.log(createReceive)
             sideBarTicket.value = true;
         }catch(err){
-            console.log(err)
             messageService.errorMessage(err);
         }
     }

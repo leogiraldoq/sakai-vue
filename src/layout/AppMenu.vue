@@ -40,9 +40,12 @@ const model = ref([
                 ]
             },
             {
-                label: 'Send',
+                label: 'Packing',
                 icon: 'pi pi-fw pi-truck',
-                to: '/bsp/send/create'
+                items: [
+                    { label: 'Prepare', icon: 'pi pi-fw pi-box', to: '/bsp/send/create'},
+                    { label: 'Deliver', icon: 'pi pi-fw pi-gift', to: '/bsp/send/deliver'}
+                ]
             }
         ]
     },

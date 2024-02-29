@@ -177,6 +177,22 @@ const router = createRouter({
                     meta:{
                         isAuth:true
                     }
+                },
+                {
+                    path: '/bsp/send/deliver',
+                    name: 'senddeliver',
+                    component: () => import('@/views/bsp/Send/Deliver.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/send/deliver/action',
+                    name: 'send-deliver-action',
+                    component: () => import('@/views/bsp/Send/Delivered.vue'),
+                    meta:{
+                        isAuth:true
+                    }
                 }
             ]
         },
