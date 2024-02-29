@@ -75,12 +75,12 @@
     const boutiqueOne = ref(null);
     
     onMounted(async () => {
-       await shipperService.getAll().then((res) => ( shippersOptions.value = res.data ));   
-       await customerService.getCustomerAndBoutique().then((res) => (customerOptions.value = res.data));
-       await productService.showWithBoxAuto().then((res) => (prodOptions.value = res.data));
-       await receiveService.queryDetailsAll(moment().format('YYYY-M-D')).then((list) => (receiveListPerDate.value = list.data));
-       todayDate.value = moment().format('MMMM Do YYYY');
-       initCamera();
+        await shipperService.getAll().then((res) => ( shippersOptions.value = res.data ));   
+        await customerService.getCustomerAndBoutique().then((res) => (customerOptions.value = res.data));
+        await productService.showWithBoxAuto().then((res) => (prodOptions.value = res.data));
+        await receiveService.queryDetailsAll(moment().format('YYYY-M-D')).then((list) => (receiveListPerDate.value = list.data));
+        todayDate.value = moment().format('MMMM Do YYYY');
+        initCamera();
     });
     const searchShippers = (event) =>{
         setTimeout(() =>{ 

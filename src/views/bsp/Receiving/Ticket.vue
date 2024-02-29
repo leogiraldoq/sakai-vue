@@ -23,14 +23,30 @@
         stickers: null
     });
     const showDelete = ref(false);
-    
+    const webSocketPrinter = ref(null);
+    const wsStickersData = reactive({
+        file: null,
+        printer: 'Stickers'
+    })
     onMounted( async ()=>{
+        wsStickersData.file = ticket.stickers
         if(action.value === "create"){
             await createTicketToPrint();
         }else if (action.value === "delete") {
             showDelete.value = true;
         }
-
+        
+        webSocketPrinter.value = new WebSocket("ws://localhost:8765");
+        webSocketPrinter.value.onopen = () => {
+            webSocketPrinter.value.send(JSON.stringify(wsStickersData));
+        }
+        
+        /*if (webSocketPrinter.value.readyState  === 1) {
+             
+                webSocketPrinter.value.send(JSON.stringify({"type": "2", "token": "token"}));
+             
+             
+        }*/
     });
     
     async function createTicketToPrint(){
