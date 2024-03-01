@@ -27,7 +27,12 @@
     const wsStickersData = reactive({
         file: null,
         printer: 'Stickers'
+    });
+    const wsTicketsData = reactive({
+        file: null,
+        printer: 'EPSON TM-T88V ReceiptE4'
     })
+    
     onMounted( async ()=>{
         wsStickersData.file = ticket.stickers
         if(action.value === "create"){
@@ -61,6 +66,7 @@
             }
             reader.readAsDataURL(pdfOut);
         });
+        
     }
     
     function parseDate(date){
@@ -70,12 +76,18 @@
     async function saveTicket(){
         const messageService = new MessageService();
         try {
+            wsTicketsData.file = formTicket.ticket.replace('data:application/pdf;base64,','');
+            if (webSocketPrinter.value.readyState  === 1) {
+                webSocketPrinter.value.send(JSON.stringify(wsTicketsData));
+            }
             const receiveService = new ReceiveService();
             const resTicket = await receiveService.upserTicket(formTicket);
+            
             pdfs.ticket = formTicket.ticket
             pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
             pdfPrintDialog.value = true;
         } catch (e) {
+            console.log(e)
             messageService.errorMessage(e)
         }
     }
@@ -91,11 +103,8 @@
     }
     
     async function printTicket(){
-        var printIframeTicket = document.getElementById('pdfTicketFrame');
-        if(printIframeTicket){
-           await printIframeTicket.contentWindow.print();
-        } else {
-            console.log(printIframeTicket);
+        if (webSocketPrinter.value.readyState  === 1) {
+            webSocketPrinter.value.send(JSON.stringify(wsTicketsData));
         }
     }
     
