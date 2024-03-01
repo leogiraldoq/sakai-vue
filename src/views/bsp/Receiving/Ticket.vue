@@ -26,11 +26,13 @@
     const webSocketPrinter = ref(null);
     const wsStickersData = reactive({
         file: null,
-        printer: 'Stickers'
+        printer: 'Stickers',
+        file_name: ticket.follow_number+"Sticker"
     });
     const wsTicketsData = reactive({
         file: null,
-        printer: 'EPSON TM-T88V ReceiptE4'
+        printer: 'EPSON TM-T88V ReceiptE4',
+        file_name: ticket.follow_number+"Ticket"
     })
     
     onMounted( async ()=>{
@@ -40,18 +42,13 @@
         }else if (action.value === "delete") {
             showDelete.value = true;
         }
-        
+        console.log(wsStickersData)
+        console.log(wsTicketsData)
         webSocketPrinter.value = new WebSocket("ws://localhost:8765");
         webSocketPrinter.value.onopen = () => {
             webSocketPrinter.value.send(JSON.stringify(wsStickersData));
         }
         
-        /*if (webSocketPrinter.value.readyState  === 1) {
-             
-                webSocketPrinter.value.send(JSON.stringify({"type": "2", "token": "token"}));
-             
-             
-        }*/
     });
     
     async function createTicketToPrint(){
@@ -77,9 +74,7 @@
         const messageService = new MessageService();
         try {
             wsTicketsData.file = formTicket.ticket.replace('data:application/pdf;base64,','');
-            if (webSocketPrinter.value.readyState  === 1) {
-                webSocketPrinter.value.send(JSON.stringify(wsTicketsData));
-            }
+            printTicket();
             const receiveService = new ReceiveService();
             const resTicket = await receiveService.upserTicket(formTicket);
             
