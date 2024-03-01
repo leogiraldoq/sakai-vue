@@ -100,11 +100,8 @@
     }
     
     async function printStickers(){
-        let printIframeStickers = document.getElementById('pdfStickersFrame');
-        if(printIframeStickers){
-            await printIframeStickers.contentWindow.print();
-        } else {
-            console.log(printIframeStickers);
+        if (webSocketPrinter.value.readyState  === 1) {
+            webSocketPrinter.value.send(JSON.stringify(wsStickersData));
         }
     }
     
