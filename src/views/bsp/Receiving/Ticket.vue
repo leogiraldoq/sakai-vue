@@ -25,29 +25,24 @@
     const showDelete = ref(false);
     const webSocketPrinter = ref(null);
     const wsStickersData = reactive({
-        file: null,
+        file: ticket.print.stickers,
         printer: 'Stickers',
         orientation: 'Landscape',
         file_name: ticket.follow_number+"Sticker"
     });
     const wsTicketsData = reactive({
-        file: null,
+        file: ticket.print.ticket,
         printer: 'EPSON TM-T88V ReceiptE4',
         orientation: "Portrait",
         file_name: ticket.follow_number+"Ticket"
     })
     
     onMounted( async ()=>{
-        console.log(ticket.print)
-        wsStickersData.file = ticket.print.stickers
-        wsTicketsData.file = ticket.print.ticket
         if(action.value === "create"){
             await createTicketToPrint();
         }else if (action.value === "delete") {
             showDelete.value = true;
         }
-        console.log(wsStickersData)
-        console.log(wsTicketsData)
         webSocketPrinter.value = new WebSocket("ws://localhost:8765");
         webSocketPrinter.value.onopen = async () => {
             await webSocketPrinter.value.send(JSON.stringify(wsStickersData));
@@ -68,6 +63,7 @@
             }
             reader.readAsDataURL(pdfOut);
         });
+        
     }
     
     function parseDate(date){
@@ -190,3 +186,19 @@
     }
 
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
