@@ -10,9 +10,15 @@
     const route = useRoute();
     const customerId = ref(route.params.id);
     const whoaim = ref(null);
+    const userService = new UsersService();
+    const sendService = new SendService();
+    const customerDeliverData = ref([]);
+    
     
     onMounted( async ()=>{
         await userService.me().then((res) => (whoaim.value = res.data));
+        await sendService.customerToDelivery(customerId.value).then((res)=>(customerDeliverData.value = res.data));
+        
     });
     
     

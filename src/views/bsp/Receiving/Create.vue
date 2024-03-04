@@ -184,7 +184,6 @@
             let resReceive = await receiveService.create(formReceive);
             createReceive.action = "create";
             createReceive.ticket = resReceive.data.ticket;
-            console.log(createReceive.ticket);
             receiveListPerDate.value.push(resReceive.data.resume[0]);
             await messageService.successMessageSimple(resReceive.message,"Ok!");
             Object.assign(formReceive,{

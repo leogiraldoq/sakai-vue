@@ -27,16 +27,20 @@
     const wsStickersData = reactive({
         file: null,
         printer: 'Stickers',
+        orientation: 'Landscape',
         file_name: ticket.follow_number+"Sticker"
     });
     const wsTicketsData = reactive({
         file: null,
         printer: 'EPSON TM-T88V ReceiptE4',
+        orientation: "Portrait",
         file_name: ticket.follow_number+"Ticket"
     })
     
     onMounted( async ()=>{
-        wsStickersData.file = ticket.stickers
+        console.log(ticket.print)
+        wsStickersData.file = ticket.print.stickers
+        wsTicketsData.file = ticket.print.ticket
         if(action.value === "create"){
             await createTicketToPrint();
         }else if (action.value === "delete") {
@@ -45,8 +49,9 @@
         console.log(wsStickersData)
         console.log(wsTicketsData)
         webSocketPrinter.value = new WebSocket("ws://localhost:8765");
-        webSocketPrinter.value.onopen = () => {
-            webSocketPrinter.value.send(JSON.stringify(wsStickersData));
+        webSocketPrinter.value.onopen = async () => {
+            await webSocketPrinter.value.send(JSON.stringify(wsStickersData));
+            await webSocketPrinter.value.send(JSON.stringify(wsTicketsData));
         }
         
     });
@@ -59,18 +64,17 @@
             var reader = new FileReader();
             reader.onloadend = () => {
                 formTicket.ticket = reader.result
-                saveTicket();
+                //saveTicket();
             }
             reader.readAsDataURL(pdfOut);
         });
-        
     }
     
     function parseDate(date){
         return moment(date).format('MMMM Do YYYY, h:mm:ss a');
     }
     
-    async function saveTicket(){
+    /*async function saveTicket(){
         const messageService = new MessageService();
         try {
             wsTicketsData.file = formTicket.ticket.replace('data:application/pdf;base64,','');
@@ -80,14 +84,14 @@
             
             pdfs.ticket = formTicket.ticket
             pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
-            pdfPrintDialog.value = true;
+            
         } catch (e) {
             console.log(e)
             messageService.errorMessage(e)
         }
-    }
+    }*/
     
-    function convertBlobPdf(base64File){
+    /*function convertBlobPdf(base64File){
         const byteCharacters = atob(base64File);
         const byteNumbers = new Array(byteCharacters.length);
         for (let i = 0; i < byteCharacters.length; i++){
@@ -95,7 +99,7 @@
         }
         const byteArray = new Uint8Array(byteNumbers);
         return new Blob([byteArray],{ type: 'application/pdf'});
-    }
+    }*/
     
     async function printTicket(){
         if (webSocketPrinter.value.readyState  === 1) {
@@ -155,10 +159,10 @@
     <Dialog v-model:visible="pdfPrintDialog" modal header="Print" :style="{ width: '70rem' }">
         <div class="grid">
             <div class="col-6">
-                <iframe :src="pdfs.ticket" id="pdfTicketFrame" width="100%"></iframe>
+                <iframe :src="wsTicketsData.file" id="pdfTicketFrame" width="100%"></iframe>
             </div>
             <div class="col-6">
-                <iframe :src="pdfs.stickers" id="pdfStickersFrame" width="100%"></iframe>
+                <iframe :src="wsStickersData.file" id="pdfStickersFrame" width="100%"></iframe>
             </div>
         </div>
         <template #footer>
