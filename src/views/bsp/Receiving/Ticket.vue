@@ -10,7 +10,6 @@
     
     const props = defineProps(['data']);
     const emit = defineEmits(['deleteTicket']);
-    const action = ref(props.data.action);
     const ticket = props.data.ticket;
     const ticketToPrint = ref(null);
     const formTicket = reactive({
@@ -149,10 +148,10 @@
             <p class="ticketFont"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
         </div>
         <div class="col-12">
-            <Button label="Yes Delete" size="small" severity="danger" icon="pi pi-trash" class="w-full" @click="yesDelete(ticket.id_receive)"/>
-            <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()" class="w-full"/>
-            <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" class="w-full"/>
-            <Button label="Who deliver?" icon="pi pi-photo" severity="help" @click="showPhoto=true" class="w-full"/>
+            <Button label="Yes Delete" size="small" severity="danger" icon="pi pi-trash" class="w-full mb-1" @click="yesDelete(ticket.id_receive)"/>
+            <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()" class="w-full mb-1"/>
+            <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" class="w-full mb-1"/>
+            <Button label="Who deliver?" icon="pi pi-image" severity="help" @click="showPhoto=true" class="w-full"/>
         </div>
     </div>
     <Dialog v-model:visible="showPhoto" modal header="Photo deliver" :style="{ width: 'auto' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">

@@ -327,12 +327,10 @@
     const deleteRe = reactive({
         id_receive: null
     });
-    async function showDeleteReceive(id){
+    async function showReceive(id){
         try{
-            let resDelete = await receiveService.bringTicket(id);
-            console.log(resDelete)
-            createReceive.action = "delete";
-            createReceive.ticket = resDelete.data;
+            let resReceive = await receiveService.bringTicket(id);
+            createReceive.ticket = resReceive.data;
             sideBarTicket.value = true;
         }catch(err){
             messageService.errorMessage(err);
@@ -542,8 +540,7 @@
                         <Column header="Actions">
                             <template #body="{data}">
                                 <span class="p-buttonset">
-                                    <Button label="Print" size="small" severity="info" icon="pi pi-print" :value="data"/>
-                                    <Button label="Delete" size="small" severity="danger" icon="pi pi-trash" @click="showDeleteReceive(data.receive.id_receive)"/>
+                                    <Button label="Actions" size="small" severity="help" icon="pi pi-cog" @click="showReceive(data.receive.id_receive)"/>
                                 </span>
                             </template>
                         </Column>
