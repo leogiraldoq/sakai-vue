@@ -173,6 +173,20 @@
         }
     }
     
+    const webSocketPrinter = ref(null);
+    const wsStickersData = reactive({
+        file: null,
+        printer: 'Stickers',
+        orientation: 'Landscape',
+        file_name: null
+    });
+    const wsTicketsData = reactive({
+        file: null,
+        printer: 'EPSON TM-T88V ReceiptE4',
+        orientation: "Portrait",
+        file_name: null
+    })
+    
     async function createReceiveBox(){    
         try {
             loadingCreate.value = true;
@@ -182,9 +196,18 @@
                 return;
             }
             let resReceive = await receiveService.create(formReceive);
-            createReceive.action = "create";
-            createReceive.ticket = resReceive.data.ticket;
+            wsStickersData.file = resReceive.data.ticket.print.stickers;
+            wsStickersData.file_name= resReceive.data.ticket.follow_number+"Sticker"
+            wsTicketsData.file = resReceive.data.ticket.print.ticket;
+            wsTicketsData.file_name = resReceive.data.ticket.follow_number+"Ticket"
+            
             receiveListPerDate.value.push(resReceive.data.resume[0]);
+            
+            webSocketPrinter.value = new WebSocket("ws://localhost:8765");
+            webSocketPrinter.value.onopen = async () => {
+                await webSocketPrinter.value.send(JSON.stringify(wsStickersData));
+                await webSocketPrinter.value.send(JSON.stringify(wsTicketsData));
+            }
             await messageService.successMessageSimple(resReceive.message,"Ok!");
             Object.assign(formReceive,{
                 user: null,
@@ -204,13 +227,13 @@
                 ]
             });
             vFormReceive$.value.$reset();
-            sideBarTicket.value = true;
             loadingCreate.value = false;
             showVideo.value = true;
             showCanvas.value = false;
             messageProcess.value=null;
 
         } catch (err) {
+            console.log(err)
             messageService.errorMessage(err);
             loadingCreate.value = false;
         }
@@ -244,7 +267,7 @@
 
     }
     
-    var width = 350;
+    var width = 500;
     var height = 0;
     var streaming = false;
     
@@ -307,9 +330,9 @@
     async function showDeleteReceive(id){
         try{
             let resDelete = await receiveService.bringTicket(id);
+            console.log(resDelete)
             createReceive.action = "delete";
             createReceive.ticket = resDelete.data;
-            console.log(createReceive)
             sideBarTicket.value = true;
         }catch(err){
             messageService.errorMessage(err);

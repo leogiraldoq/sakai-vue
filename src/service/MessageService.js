@@ -37,7 +37,7 @@ export default class MessageService{
         this.router = router;
         return await Swal.fire({
            title: "Ok!",
-           text: message,
+           html: message,
            icon: "success",
            showDenyButton: true,
            confirmButtonText: btnConfirmText,
@@ -55,7 +55,7 @@ export default class MessageService{
     async successMessageSimple(message,btnConfirmText){
         await Swal.fire({
            title: "Ok!",
-           text: message,
+           html: message,
            icon: "success",
            confirmButtonText: btnConfirmText,
         });

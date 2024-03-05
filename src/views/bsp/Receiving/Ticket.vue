@@ -44,11 +44,9 @@
             showDelete.value = true;
         }
         webSocketPrinter.value = new WebSocket("ws://localhost:8765");
-        webSocketPrinter.value.onopen = async () => {
-            await webSocketPrinter.value.send(JSON.stringify(wsStickersData));
-            await webSocketPrinter.value.send(JSON.stringify(wsTicketsData));
-        }
-        
+            webSocketPrinter.value.onopen = () => {
+                console.log("WebSocket conected");
+            }
     });
     
     async function createTicketToPrint(){
@@ -113,11 +111,13 @@
         console.log(idReceive);
         emit('deleteTicket',ticket.id_receive);
     }
+    
+    const showPhoto = ref(false);
 </script>
 
 <template>
     <div class="grid justify-content-center align-items-center ticketFont" ref="ticketToPrint" id="ticketToPrint">
-        <div class="col-12" v-show="showDelete"><h5 style="color: #ff0000">This is the receive that you want to delete?</h5></div>
+        <div class="col-12"><h5>More actions recieve # {{ticket.follow_number}}</h5></div>
         <div class="col-12 text-center">
             <img src="/layout/images/logoBlueStarPacking.png" alt="Blue Star Packing" class="w-10"/>
             <b>Receiving Receipt # {{ticket.follow_number}}</b><br/>
@@ -148,30 +148,18 @@
             <p><b>Received By:</b> {{ticket.user.employee.names}}</p>
             <p class="ticketFont"><b>Important Notice:</b> Blue Star Packing INC, is not responsable for lost or damage pieces, on any kind of merchandise. This receipt is valid only packages as in boxes or bags and not by pieces. Merchandise in all packages and boxes are subject to revision after delivery date and therfore will not be counted upon delivery. Stores will be notified in the event of missing or damage pieces. Blue Star Packing it is not responsible fro any kind of nerchandise after 30 days of the date printed on this receip. Thank you!</p>
         </div>
-        <div class="col-12" v-show="showDelete">
+        <div class="col-12">
             <Button label="Yes Delete" size="small" severity="danger" icon="pi pi-trash" class="w-full" @click="yesDelete(ticket.id_receive)"/>
+            <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()" class="w-full"/>
+            <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" class="w-full"/>
+            <Button label="Who deliver?" icon="pi pi-photo" severity="help" @click="showPhoto=true" class="w-full"/>
         </div>
     </div>
-    <Dialog v-model:visible="pdfPrintDialog" modal header="Print" :style="{ width: '70rem' }">
-        <div class="grid">
-            <div class="col-6">
-                <iframe :src="wsTicketsData.file" id="pdfTicketFrame" width="100%"></iframe>
-            </div>
-            <div class="col-6">
-                <iframe :src="wsStickersData.file" id="pdfStickersFrame" width="100%"></iframe>
-            </div>
-        </div>
-        <template #footer>
-            <div class="grid">
-                <div class="col-6">
-                    <Button label="Print Ticket" icon="pi pi-print" severity="info" @click="printTicket()" autofocus class="w-full"/>
-                </div>
-                <div class="col-6">            
-                    <Button label="Print Stickers" icon="pi pi-print" outlined severity="info" @click="printStickers()" autofocus class="w-full"/>
-                </div>
-            </div>                    
-        </template>
+    <Dialog v-model:visible="showPhoto" modal header="Photo deliver" :style="{ width: 'auto' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+        <Image :src="ticket.photo" alt="Who deliver" preview />
     </Dialog>
+    
+    
 </template>
 
 <style scoped>
@@ -182,7 +170,7 @@
         border-collapse: collapse;
     }
     .ticketFont {
-        font-size: 10px;
+        font-size: 11px;
     }
 
 </style>
