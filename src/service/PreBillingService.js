@@ -16,4 +16,19 @@ export default class PreBillingService{
             throw preBill;
         }
         
+        
+        async resume(){
+            const preBillResume = await fetch(import.meta.env.VITE_API_URL + '/pre-bill/list-all',{
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer '+localStorage.getItem("token"),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            if(preBillResume.ok){
+                return await preBillResume.json();
+            }
+            throw preBillResume;
+        }
 }

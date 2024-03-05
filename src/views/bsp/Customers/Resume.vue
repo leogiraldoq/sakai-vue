@@ -70,7 +70,6 @@
                                 <Button label="Add labels" size="small" severity="success" outlined/>
                                 <Button label="Not Process" size="small" severity="secondary" outlined @click="showNotProcess(data)"/>
                                 <Button label="Instructions" size="small" severity="info" outlined @click="showInstructions(data.id_costumer)"/>
-                                    
                             </span>
                         </template>
                     </Column>

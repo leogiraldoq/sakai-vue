@@ -64,7 +64,6 @@
             });
 
             window.Echo.channel('qr.prebill.'+whoaim.value.id_user).listen('PreBilling', (event) => {
-                console.log(JSON.parse(event.data));
                 showQrResult(JSON.parse(event.data));
             });    
         });   
@@ -82,7 +81,6 @@
                 msgService.successMessageSimple(resultQr.message+": "+qrReaderBrodcast.value.names,"Got it!");
             }
         } catch (e) {
-            console.log(e)
             msgService.errorMessage(e)
         }
     }

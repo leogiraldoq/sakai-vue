@@ -17,7 +17,6 @@
     onMounted(async() => {
        await shopService.listProcessAndNot(customer.id_costumer).then((res)=>{
            shopsProcess.value = res.data.process;
-           console.log(shopsProcess)
            shopsNotProcess.value = res.data.not_process;
        });
     });
@@ -38,12 +37,10 @@
     
     async function addShopNotProcess(id){
         try {
-            console.log(id)
             const addNotProcess = reactive({
                 customerId: customer.id_costumer,
                 shopNoProcess: id
             });
-            console.log(addNotProcess)
             const resShopNotProcess = await customerService.addShopNotProcess(addNotProcess);
             shopsProcess.value = resShopNotProcess.data.process;
             shopsNotProcess.value = resShopNotProcess.data.not_process;
@@ -55,30 +52,12 @@
 </script>
 <template>
     <div class="col-12 p-0">
-        <h5>Shops not process for {{customer.name}}</h5>
+        <h5>Stores not process for {{customer.name}}</h5>
     </div>
     <Divider />
+    
     <div class="col-12 m-0 p-0">
-        <p class="font-bold mb-2">Shops Not process: </p>
-        <DataTable 
-            :value="shopsNotProcess" 
-            stripedRows 
-            size="small"
-            scrollable
-            scrollHeight="200px"
-        >
-            <template #empty>Not process shops not found</template>
-            <Column field="shipper.name" header="Shops"></Column>
-            <Column field="id" header="Remove" class="text-center">
-                <template #body="{data}">
-                    <Button icon="pi pi-times" severity="danger" rounded outlined :value="data.id" @click="removeShopNotProcess(data.id)"/>
-                </template>
-            </Column>
-        </DataTable>
-    </div>
-    <Divider />
-    <div class="col-12 m-0 p-0">
-        <p class="font-bold mb-2">Shops process: </p>
+        <p class="font-bold mb-2">Process: </p>
         <DataTable 
             :value="shopsProcess" 
             stripedRows 
@@ -86,7 +65,7 @@
             scrollable
             scrollHeight="200px"
         >
-            <template #empty>Shops process not found</template>
+            <template #empty>Stores process not found</template>
             <Column field="name" header="Shops"></Column>
             <Column field="id_shipper" header="Add not process" class="text-center">
                 <template #body="{data}">
@@ -95,4 +74,24 @@
             </Column>
         </DataTable>
     </div>
+    <Divider />
+    <div class="col-12 m-0 p-0">
+        <p class="font-bold mb-2">Not process: </p>
+        <DataTable 
+            :value="shopsNotProcess" 
+            stripedRows 
+            size="small"
+            scrollable
+            scrollHeight="200px"
+        >
+            <template #empty>Stores Not process shops not found</template>
+            <Column field="shipper.name" header="Shops"></Column>
+            <Column field="id" header="Remove" class="text-center">
+                <template #body="{data}">
+                    <Button icon="pi pi-times" severity="danger" rounded outlined :value="data.id" @click="removeShopNotProcess(data.id)"/>
+                </template>
+            </Column>
+        </DataTable>
+    </div>
+    
 </template>
