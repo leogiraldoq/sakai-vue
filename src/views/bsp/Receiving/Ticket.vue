@@ -37,62 +37,16 @@
     })
     
     onMounted( async ()=>{
-        if(action.value === "create"){
-            await createTicketToPrint();
-        }else if (action.value === "delete") {
-            showDelete.value = true;
-        }
         webSocketPrinter.value = new WebSocket("ws://localhost:8765");
             webSocketPrinter.value.onopen = () => {
                 console.log("WebSocket conected");
             }
     });
-    
-    async function createTicketToPrint(){
-        await domtoimage.toPng(ticketToPrint.value).then((imageData) => {
-            const pdf = new jsPDF("p","in",[4,11]);
-            pdf.addImage(imageData,"PNG",0.3,0.05,4,11);
-            var pdfOut = pdf.output('blob');
-            var reader = new FileReader();
-            reader.onloadend = () => {
-                formTicket.ticket = reader.result
-                //saveTicket();
-            }
-            reader.readAsDataURL(pdfOut);
-        });
         
-    }
-    
     function parseDate(date){
         return moment(date).format('MMMM Do YYYY, h:mm:ss a');
     }
     
-    /*async function saveTicket(){
-        const messageService = new MessageService();
-        try {
-            wsTicketsData.file = formTicket.ticket.replace('data:application/pdf;base64,','');
-            printTicket();
-            const receiveService = new ReceiveService();
-            const resTicket = await receiveService.upserTicket(formTicket);
-            
-            pdfs.ticket = formTicket.ticket
-            pdfs.stickers = 'data:application/pdf;base64,'+ticket.stickers;
-            
-        } catch (e) {
-            console.log(e)
-            messageService.errorMessage(e)
-        }
-    }*/
-    
-    /*function convertBlobPdf(base64File){
-        const byteCharacters = atob(base64File);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++){
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        return new Blob([byteArray],{ type: 'application/pdf'});
-    }*/
     
     async function printTicket(){
         if (webSocketPrinter.value.readyState  === 1) {
@@ -107,7 +61,6 @@
     }
     
     function yesDelete(idReceive){
-        console.log(idReceive);
         emit('deleteTicket',ticket.id_receive);
     }
     
@@ -116,7 +69,7 @@
 
 <template>
     <div class="grid justify-content-center align-items-center ticketFont" ref="ticketToPrint" id="ticketToPrint">
-        <div class="col-12"><h5>More actions recieve # {{ticket.follow_number}}</h5></div>
+        <div class="col-12"><h5>More actions receive # {{ticket.follow_number}}</h5></div>
         <div class="col-12 text-center">
             <img src="/layout/images/logoBlueStarPacking.png" alt="Blue Star Packing" class="w-10"/>
             <b>Receiving Receipt # {{ticket.follow_number}}</b><br/>
