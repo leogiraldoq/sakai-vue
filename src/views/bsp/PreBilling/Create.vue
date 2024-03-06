@@ -86,9 +86,12 @@
     }
     
     function showQrResult(result){
-        console.log(result)
         if(result){
-            if(result.instructions !== null){
+            if(resultQr.data.invoiceNum !== null){
+                    messageQr.value=[
+                        { severity: 'error', content: "This box has and invoice number create # "+resultQr.data.invoiceNum+". Contact the manager", id: 1}
+                    ];
+                } else if(result.instructions !== null){
                 showResultQr.value = true;
                 saveButtonDisabled.value = false;
                 Object.assign(qrRead,result)
