@@ -87,8 +87,8 @@
     
     function showQrResult(result){
         if(result){
-            if(resultQr.data.invoiceNum !== null){
-                    msgService.errorMessageSimple("This box has and invoice number create # "+resultQr.data.invoiceNum+". Contact the manager","Got it!");
+            if(result.invoiceNum !== null){
+                    msgService.errorMessageSimple("This box has and <b>invoice number create # "+result.invoiceNum+"</b>. Contact the manager","Got it!");
                 } else if(result.instructions !== null){
                 showResultQr.value = true;
                 saveButtonDisabled.value = false;
