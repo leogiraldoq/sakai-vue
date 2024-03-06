@@ -5,6 +5,9 @@
     import ProfilesModulesService from '@/service/ProfilesModulesService';
     import MessageService from '@/service/MessageService';
     import { useRouter } from 'vue-router';
+    import { Vue3JsonEditor } from 'vue3-json-editor'
+    import MenuAdmin from '@/assets/json/MenuAdmin';
+    import MenuBsp from '@/assets/json/MenuBsp';
 
     const router = useRouter();
     const profilemodulesservice = new ProfilesModulesService();
@@ -65,8 +68,10 @@
     }
     
     const formProfileCreate = reactive({
-        name: '',
-        description: '',
+        name: null,
+        description: null,
+        menuBsp: MenuBsp,
+        menuAdmin: MenuAdmin,
         modulesPermissions: [
         ]
     });
@@ -81,11 +86,14 @@
             if(!validateProfile){
                 return;
             }
+            console.log(formProfileCreate)
             let newProfile = await profilemodulesservice.createProfile(formProfileCreate);
             await messageservice.successMessageSimple(newProfile.message,"OK");
             Object.assign(formProfileCreate,{
-                name: '',
-                description: '',
+                name: null,
+                description: null,
+                menuBsp: JSON.stringify(MenuBsp),
+                menuAdmin: JSON.stringify(MenuAdmin),
                 modulesPermissions: [
                 ]
             });
@@ -96,6 +104,16 @@
         }
 
     }
+    
+    const showMenuAdmin = ref(false);
+    const showMenuBsp = ref(false);
+    function changeBspMenu(value){
+        formProfileCreate.menuBsp = value
+    }
+    function changeAdminMenu(value){
+        formProfileCreate.menuAdmin = value
+    }
+    
 </script>
 
 
@@ -129,14 +147,13 @@
                             />
                             <small id="textAreaModuleDesc-help" class="p-error" v-if="vModule$.description.$error">{{ vModule$.description.$errors[0].$message }}</small>
                         </div>
-                        <div class="field col-12">
-                            <Button type="submit" label="Create module" class="w-full p-3 text-l" @click.prevent="createNewModule()"></Button>
-                        </div>
                     </form>  
+                </template>
+                <template #footer>
+                    <Button type="submit" label="Create module" class="w-full p-3 text-l" @click.prevent="createNewModule()"></Button>
                 </template>
             </Card>
         </div>
-        
         <div class="col-12 md:col-8">
             <Card>
                 <template #title>Create profile</template>
@@ -192,12 +209,44 @@
                                 </Column>
                             </DataTable>
                         </div>
-                    </form>  
+                    </form>
+                    <div class=" grid col-12">
+                        <div class="field col-12 md:col-6">
+                            <Button label="Menu BlueStar" class="w-full p-3 text-l" severity="help" @click="showMenuBsp = true"></Button>
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <Button label="Menu Admin" class="w-full p-3 text-l" severity="help" @click="showMenuAdmin = true" outlined></Button>
+                        </div>
+                    </div>
                 </template>
                 <template #footer>
                     <Button type="submit" label="Create profile" class="w-full p-3 text-l" @click.prevent="createNewProfile()"></Button>         
                 </template>
             </Card>
         </div>
+        
+        <Sidebar v-model:visible="showMenuBsp" position="left" class="w-full md:w-30rem lg:w-40rem">
+            <template #header>
+                <h5>Menu Blue star to profile <b>{{ formProfileCreate.name }}</b></h5>
+            </template>
+            <Vue3JsonEditor
+                v-model="formProfileCreate.menuBsp"
+                :show-btns="false"
+                :expandedOnStart="true"
+                @json-change="changeBspMenu"
+              />
+        </Sidebar>
+        
+        <Sidebar v-model:visible="showMenuAdmin" position="left" class="w-full md:w-30rem lg:w-40rem">
+            <template #header>
+                <h5>Menu Administrator to profile <b>{{ formProfileCreate.name }}</b></h5>
+            </template>
+            <Vue3JsonEditor
+                v-model="formProfileCreate.menuAdmin"
+                :show-btns="false"
+                :expandedOnStart="true"
+                @json-change="changeAdminMenu"
+              />
+        </Sidebar>
     </div>
 </template>

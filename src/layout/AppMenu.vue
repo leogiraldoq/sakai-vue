@@ -1,103 +1,30 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import AppMenuItem from './AppMenuItem.vue';
+import ProfilesModulesService from '@/service/ProfilesModulesService';
+const profileService = new ProfilesModulesService();
 
-const model = ref([
-    {
-        label: 'Blue Star Packing',
-        items: [
-            {   
-                label: 'Dashboard', 
-                icon: 'pi pi-fw pi-home', 
-                to: '/dashboard' 
-            },
-            {
-                label: 'Receiving',
-                icon: 'pi pi-fw pi-shopping-bag',
-                to: '/bsp/receiving/create'
-            },
-            {
-                label: 'Pre Billing',
-                icon: 'pi pi-fw pi-list',
-                items: [
-                    { label: 'Resume', icon: 'pi pi-fw pi-table', to: '/bsp/pre-billing'},
-                    { label: 'Invoices', icon: 'pi pi-fw pi-inbox', to: '/bsp/pre-billing/create'},
-                ]
-            },
-            {
-                label: 'Processing',
-                icon: 'pi pi-fw pi-pencil',
-                items: [
-                    { label: 'Process', icon: 'pi pi-fw pi-tablet', to: '/bsp/processing/create'},
-                ]
-            },
-            {
-                label: 'Quality',
-                icon: 'pi pi-fw pi-flag-fill',
-                items: [
-                    { label: 'Control', icon: 'pi pi-fw pi-history', to: '/bsp/quality/create'},
-                ]
-            },
-            {
-                label: 'Packing',
-                icon: 'pi pi-fw pi-truck',
-                items: [
-                    { label: 'Prepare', icon: 'pi pi-fw pi-box', to: '/bsp/send/create'},
-                    { label: 'Deliver', icon: 'pi pi-fw pi-gift', to: '/bsp/send/deliver'}
-                ]
-            }
-        ]
-    },
-    {
-        label: 'Administration',
-        items:[
-            {
-                label: 'Employess',
-                icon: 'pi pi-users',
-                items:[
-                    { label: 'List All', icon:'pi pi-users', to:'/bsp/employees'},
-                    { label: 'Create', icon:'pi pi-user-plus', to:'/bsp/employees/create'}
-                ]
-            },
-            {
-                label: 'Profile Access',
-                icon: 'pi pi-key',
-                items:[
-                    { label: 'List All', icon:'pi pi-lock', to:'/bsp/profiles-modules'},
-                    { label: 'Create', icon:'pi pi-key', to:'/bsp/profiles-modules/create'}
-                ]
-            },
-            {
-                label: 'Customers',
-                icon: 'pi pi-building',
-                items:[
-                    { label: 'List All', icon:'pi pi-star', to:'/bsp/customers'},
-                    { label: 'Create', icon:'pi pi-star-fill', to:'/bsp/customer/create'},
-                    { label: 'Pick up Companies', icon:'pi pi-truck', to:'/bsp/pickupcompany'}
-                ]
-            },
-            {
-                label: 'Size Labels',
-                icon: 'pi pi-bookmark-fill',
-                items:[
-                    { label: 'Create And Print', icon:'pi pi-print', to:'/bsp/care/labels/create'},
-                ]
-            },
-            {
-                label: 'Boxes',
-                icon: 'pi pi-box',
-                to:'/bsp/boxes'
-            },
-            {
-                label: 'Stores',
-                icon: 'pi pi-shopping-bag',
-                to:'/bsp/shops'
-            },
+const model = ref([]);
 
-        ]
-    },
-]);
+onMounted( async () =>{
+    await profileService.getMenuPerUser().then((res) => {
+        if(JSON.parse(res.data['Bsp']).length > 0){
+            model.value.push({
+                label: 'Blue Star Packing',
+                items: JSON.parse(res.data['Bsp'])
+            });
+        }
+        if(JSON.parse(res.data['Admin']).length > 0){
+            model.value.push({
+                label: 'Administrator',
+                items: JSON.parse(res.data['Admin'])
+            });
+        }
+    });
+    
+});
+
 </script>
 
 <template>

@@ -65,5 +65,20 @@ export default class ProfilesModulesService{
         }
         throw usersProfile;
     }
+    
+    async getMenuPerUser(){
+        const resMenu = await fetch(import.meta.env.VITE_API_URL + '/profile/menu/me',{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if(resMenu.ok){
+            return await resMenu.json();
+        }
+        throw resMenu;
+    }
 }
 

@@ -1,0 +1,43 @@
+[   
+    {   
+        "label": "Dashboard", 
+        "icon": "pi pi-fw pi-home", 
+        "to": "/dashboard" 
+    },
+    {
+        "label": "Receiving",
+        "icon": "pi pi-fw pi-shopping-bag",
+        "to": "/bsp/receiving/create"
+    },
+    {
+        "label": "Pre Billing",
+        "icon": "pi pi-fw pi-list",
+        "items": [
+            { "label": "Resume", "icon": "pi pi-fw pi-table", "to": "/bsp/pre-billing"},
+            { "label": "Invoices", "icon": "pi pi-fw pi-inbox", "to": "/bsp/pre-billing/create"}
+        ]
+    },
+    {
+        "label": "Processing",
+        "icon": "pi pi-fw pi-pencil",
+        "items": [
+            { "label": "Process", "icon": "pi pi-fw pi-tablet", "to": "/bsp/processing/create"}
+        ]
+    },
+    {
+        "label": "Quality",
+        "icon": "pi pi-fw pi-flag-fill",
+        "items": [
+            { "label": "Control", "icon": "pi pi-fw pi-history", "to": "/bsp/quality/create"}
+        ]
+    },
+    {
+        "label": "Packing",
+        "icon": "pi pi-fw pi-truck",
+        "items": [
+            { "label": "Prepare", "icon": "pi pi-fw pi-box", "to": "/bsp/send/create"},
+            { "label": "Deliver", "icon": "pi pi-fw pi-gift", "to": "/bsp/send/deliver"}
+        ]
+    }
+]
+

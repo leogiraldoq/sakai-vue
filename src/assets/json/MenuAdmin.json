@@ -1,0 +1,44 @@
+[
+    {
+        "label": "Employess",
+        "icon": "pi pi-users",
+        "items":[
+            { "label": "List All", "icon":"pi pi-users", "to":"/bsp/employees"},
+            { "label": "Create", "icon":"pi pi-user-plus", "to":"/bsp/employees/create"}
+        ]
+    },
+    {
+        "label": "Profile Access",
+        "icon": "pi pi-key",
+        "items":[
+            { "label": "List All", "icon":"pi pi-lock", "to":"/bsp/profiles-modules"},
+            { "label": "Create", "icon":"pi pi-key", "to":"/bsp/profiles-modules/create"}
+        ]
+    },
+    {
+        "label": "Customers",
+        "icon": "pi pi-building",
+        "items":[
+            { "label": "List All", "icon":"pi pi-star", "to":"/bsp/customers"},
+            { "label": "Create", "icon":"pi pi-star-fill", "to":"/bsp/customer/create"},
+            { "label": "Pick up Companies", "icon":"pi pi-truck", "to":"/bsp/pickupcompany"}
+        ]
+    },
+    {
+        "label": "Size Labels",
+        "icon": "pi pi-bookmark-fill",
+        "items":[
+            { "label": "Create And Print", "icon":"pi pi-print", "to":"/bsp/care/labels/create"}
+        ]
+    },
+    {
+        "label": "Boxes",
+        "icon": "pi pi-box",
+        "to":"/bsp/boxes"
+    },
+    {
+        "label": "Stores",
+        "icon": "pi pi-shopping-bag",
+        "to":"/bsp/shops"
+    }
+]
