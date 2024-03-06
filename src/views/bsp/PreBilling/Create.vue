@@ -225,7 +225,7 @@
                         </div>
                         <Divider />
                         <div class="col-12">
-                            <h5>Invoice information by {{ whoaim.value.nameEmploye }}</h5>
+                            <h5>Invoice information by {{ whoaim.nameEmploye }}</h5>
                             <div class="p-fluid formgrid grid">
                                 <div class="field col-12 md:col-4">
                                     <label for="inpInvoiceNumber">Invoice Number:</label>
