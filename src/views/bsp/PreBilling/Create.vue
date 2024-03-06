@@ -98,7 +98,7 @@
                 msgService.errorMessageSimple("The customer <b>"+result.customer+"</b> boutique <b>"+result.boutique+"</b> NOT has intructions created. Please contact the manager.","Got it!");
             }
         }else{
-            msgService.errorMessageSimple("The Qr that you read its wrong",,"Got it!");
+            msgService.errorMessageSimple("The Qr that you read its wrong","Got it!");
         }
     }
     
