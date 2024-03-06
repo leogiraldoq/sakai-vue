@@ -71,10 +71,11 @@
     const messageQr = ref([]);
     const messageProcess = ref([]);
     async function onDecodeBspQr(qrData){
-        try {
+        //try {
+        console.log(qrData)
             showCamera.value = false;
             const resultQr = await qrService.readQrProcessing(qrData);
-            
+            console.log(resultQr)
             if(resultQr.data){
                 if(resultQr.data.invoiceNum == null){
                     messageQr.value=[
@@ -103,9 +104,10 @@
                     { severity: 'error', content: "The Qr that you read its corrupt", id: 1}
                 ];
             }
-        } catch (e) {
+        /*} catch (e) {
+            console.log(e)
             msgService.errorMessage(e)
-        }
+        }*/
     }
     
     const searchColors = (event) =>{

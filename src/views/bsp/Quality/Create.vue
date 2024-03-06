@@ -60,7 +60,11 @@
             showCamera.value = false;
             const resultQr = await qrService.readQrQuality(qrData);
             if(resultQr.data){
-                if(resultQr.data.processing.process){
+                if(resultQr.data.invoiceNum == null){
+                    messageQr.value=[
+                        { severity: 'error', content: "This box NOT has invoice created. Contact the manager", id: 1}
+                    ];
+                } else if(resultQr.data.processing.process){
                     messageQuality.value=[
                         { severity: 'error', content: "This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS PROCESSING. Please contact the manager.", id: 1}
                     ];

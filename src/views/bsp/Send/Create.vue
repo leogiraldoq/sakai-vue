@@ -130,7 +130,7 @@
     
     function showResult(result){
         if(result){
-            if(result.quality !== null){
+            if(result.qualityDate !== null){
                 if(qrRead.length > 0 ){
                     console.log(result.process.length)
                     if(result.prepare.length == 0){
