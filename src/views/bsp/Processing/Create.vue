@@ -77,17 +77,11 @@
             console.log(resultQr)
             if(resultQr.data){
                 if(resultQr.data.invoiceNum == null){
-                    messageQr.value=[
-                        { severity: 'error', content: "This box NOT has invoice created. Contact the manager", id: 1}
-                    ];
+                    msgService.errorMessageSimple("This box NOT has invoice created. Contact the manager", "Got it!");
                 } else if(resultQr.data.instructions == null){
-                    messageQr.value=[
-                        { severity: 'error', content: "The customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> NOT has intructions created. Please contact the manager.", id: 1}
-                    ];
+                    msgService.errorMessageSimple("The customer <b>"+resultQr.data.customer+"</b> boutique <b>"+resultQr.data.boutique+"</b> NOT has intructions created. Please contact the manager.", "Got it!");
                 }else if(!resultQr.data.processing.process){
-                    messageProcess.value=[
-                        { severity: 'warn', content: "This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS READY FOR QUALITY REVISION. Please contact the manager.", id: 1}
-                    ];
+                    msgService.errorMessageSimple("This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS READY FOR QUALITY REVISION. Please contact the manager.","Got it!");
                     showResultQr.value = true;
                     showResumeProcess.value = true;
                     showFormProcess.value = false;
@@ -99,12 +93,9 @@
                     Object.assign(qrRead,resultQr.data)
                 }
             }else{
-                messageQr.value=[
-                    { severity: 'error', content: "The Qr that you read its corrupt", id: 1}
-                ];
+                msgService.errorMessageSimple("The Qr that you read its corrupt", "Got it!");
             }
         } catch (e) {
-            console.log(e)
             msgService.errorMessage(e)
         }
     }

@@ -151,7 +151,6 @@
                         msgService.errorMessageSimple("This box ITS READY TO DELIBER. Customer <b>"+result.customer+"</b> Boutique <b>"+result.boutique+"</b>. Please contact the manager.","Got it!");
                     }                      
                 }else{
-                    console.log(result.prepare.length)
                     if(result.prepare.length == 0){
                         qrRead.push(result);
                         totalBox.value = result.box_quantity;

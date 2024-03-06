@@ -4,6 +4,7 @@ import "sweetalert2/dist/sweetalert2.min.css";
 export default class MessageService{
         
     async errorMessage(error){
+        console.log(error)
         let errorsToShow ={};
         //if(error.status != 500){
             var messageService = new MessageService();

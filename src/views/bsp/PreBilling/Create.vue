@@ -88,23 +88,17 @@
     function showQrResult(result){
         if(result){
             if(resultQr.data.invoiceNum !== null){
-                    messageQr.value=[
-                        { severity: 'error', content: "This box has and invoice number create # "+resultQr.data.invoiceNum+". Contact the manager", id: 1}
-                    ];
+                    msgService.errorMessageSimple("This box has and invoice number create # "+resultQr.data.invoiceNum+". Contact the manager","Got it!");
                 } else if(result.instructions !== null){
                 showResultQr.value = true;
                 saveButtonDisabled.value = false;
                 Object.assign(qrRead,result)
                 formInvoice.receiveDetailId = qrRead.id_receive_details;                    
             }else{
-                messageQr.value=[
-                    { severity: 'error', content: "The customer <b>"+result.customer+"</b> boutique <b>"+result.boutique+"</b> NOT has intructions created. Please contact the manager.", id: 1}
-                ];
+                msgService.errorMessageSimple("The customer <b>"+result.customer+"</b> boutique <b>"+result.boutique+"</b> NOT has intructions created. Please contact the manager.","Got it!");
             }
         }else{
-            messageQr.value=[
-                { severity: 'error', content: "The Qr that you read its wrong", id: 1}
-            ];
+            msgService.errorMessageSimple("The Qr that you read its wrong",,"Got it!");
         }
     }
     

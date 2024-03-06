@@ -61,21 +61,15 @@
             const resultQr = await qrService.readQrQuality(qrData);
             if(resultQr.data){
                 if(resultQr.data.invoiceNum == null){
-                    messageQr.value=[
-                        { severity: 'error', content: "This box NOT has invoice created. Contact the manager", id: 1}
-                    ];
+                    msgService.errorMessageSimple("This box NOT has invoice created. Contact the manager", "Got it!");
                 } else if(resultQr.data.processing.process){
-                    messageQuality.value=[
-                        { severity: 'error', content: "This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS PROCESSING. Please contact the manager.", id: 1}
-                    ];
+                    msgService.errorMessageSimple("This order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" ITS PROCESSING. Please contact the manager.","Got it!");
                     showResultQr.value = true;
                     Object.assign(qrRead,resultQr.data)
                     showFormQuality.value = false;
                 }else if(resultQr.data.quality.length > 0){
                     let dateQuality = formatDate(resultQr.data.quality[0].created_at)
-                    messageQuality.value=[
-                        { severity: 'error', content: "The order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" has already gone in "+dateQuality+" through the process quality. Please contact the manager.", id: 1}
-                    ];
+                    msgService.errorMessageSimple("The order for the customer "+resultQr.data.customer+" boutique "+resultQr.data.boutique+" has already gone in "+dateQuality+" through the process quality. Please contact the manager.","Got it!");
                     showResultQr.value = true;
                     Object.assign(qrRead,resultQr.data)
                     showFormQuality.value = false;
@@ -85,13 +79,9 @@
                     showFormQuality.value = true;
                 }
             }else{
-                messageQr.value=[
-                    { severity: 'error', content: "The Qr that you read its corrupt", id: 1}
-                ];
+                msgService.errorMessageSimple("The Qr that you read its corrupt","Got it!");
             }
-            console.log(qrRead)
         } catch (e) {
-            console.log(e)
             msgService.errorMessage(e)
         }
     }
