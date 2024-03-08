@@ -163,6 +163,14 @@ const router = createRouter({
                     }
                 },
                 {
+                    path: '/bsp/processing/',
+                    name: 'processingresume',
+                    component: () => import('@/views/bsp/Processing/Resume.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
                     path: '/bsp/quality/create',
                     name: 'quality',
                     component: () => import('@/views/bsp/Quality/Create.vue'),
@@ -187,9 +195,10 @@ const router = createRouter({
                     }
                 },
                 {
-                    path: '/bsp/send/deliver/action',
+                    path: '/bsp/send/deliver/:id',
                     name: 'send-deliver-action',
                     component: () => import('@/views/bsp/Send/Delivered.vue'),
+                    props:true,
                     meta:{
                         isAuth:true
                     }

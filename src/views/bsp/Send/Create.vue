@@ -343,11 +343,11 @@
                             <div class="col-12">
                                 <table class="w-full">
                                     <tr>
-                                        <th style="width: 5%;">Qnty</th>
-                                        <th style="width: 20%;">Product</th>
+                                        <th style="width: 15%;">Qnty</th>
+                                        <th style="width: 25%;">Product</th>
                                         <th style="width: 15%;">Size</th>
-                                        <th style="width: 10%;">WT (Lbs)</th>
-                                        <th style="width: 40%;">Stores in box</th>
+                                        <th style="width: 15%;">WT (Lbs)</th>
+                                        <th style="width: 30%;">Stores in box</th>
                                         <th style="width: 10%;">Action</th>
                                     </tr>
                                     <tr v-for="(prepare, cB) in preparePacking.prepare" :key="cB">

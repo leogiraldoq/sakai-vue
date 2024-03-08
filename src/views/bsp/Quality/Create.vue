@@ -230,8 +230,9 @@
                                     <th>Set</th>
                                     <th>Color</th>
                                     <th>Share Work</th>
+                                    <th>Add Work</th>
                                     <th>Made for</th>
-                                    <th>Total Pieces Work</th>
+                                    <th>Total Work</th>
                                     <th>Date</th>
                                     <th v-if="showFormQuality">Quality</th>
                                 </tr>
@@ -241,6 +242,7 @@
                                     <td>{{process.styleSet}}</td>
                                     <td>{{process.styleColor}}</td>
                                     <td>{{process.workShare}}</td>
+                                    <td>{{process.addWork}}</td>
                                     <td>{{process.madeFor}}</td>
                                     <td>{{process.total}}</td>
                                     <td>{{ formatDate(process.created_at) }}</td> 
@@ -321,13 +323,13 @@
 
 <style scoped>
     table, td, th {
-        border: 2px solid #000000;
+        border: 1px solid #000000;
         text-align: center;
     }
 
     td{
-        font-size: 18px;
-        padding: 10px;
+        font-size: 14px;
+        padding: 3px;
     }
     
     th {

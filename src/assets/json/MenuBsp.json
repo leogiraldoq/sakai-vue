@@ -21,6 +21,7 @@
         "label": "Processing",
         "icon": "pi pi-fw pi-pencil",
         "items": [
+            { "label": "Resume", "icon": "pi pi-fw pi-table", "to": "/bsp/processing/"},
             { "label": "Process", "icon": "pi pi-fw pi-tablet", "to": "/bsp/processing/create"}
         ]
     },
@@ -40,4 +41,3 @@
         ]
     }
 ]
-

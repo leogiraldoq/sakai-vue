@@ -46,4 +46,20 @@ export default class SendService{
          }
          throw resCusToDelivery;
       }
+      
+      async saveDelivered(deliverData){
+          const resDeliverCreate = await fetch(import.meta.env.VITE_API_URL + '/delivery/create',{
+            method: "POST",
+            headers: {
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(deliverData)
+         });
+         if(resDeliverCreate.ok){
+             return await resDeliverCreate.json();
+         }
+         throw resDeliverCreate;
+      }
 }

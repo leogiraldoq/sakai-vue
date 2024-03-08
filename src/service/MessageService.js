@@ -62,6 +62,16 @@ export default class MessageService{
         });
 
     }
+    
+    async warningMessageSimple(message){
+        await Swal.fire({
+           title: "Warning!",
+           html: message,
+           icon: "warning",
+           confirmButtonText: "Got it!",
+        });
+
+    }
         
     async formatErrorObject(error){
         var messageService = new MessageService();

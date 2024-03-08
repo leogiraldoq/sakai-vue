@@ -22,6 +22,7 @@
     });
     
     function showDeliverContent(idCustomer){
+        console.log(idCustomer)
         router.push({
            name:'send-deliver-action',
            params: {
@@ -50,7 +51,7 @@
                         <Column header="Actions">
                             <template #body="{data}">
                                 <span class="p-buttonset">
-                                    <Button label="Deliver" icon="pi pi-truck" size="small" severity="help"@click="showDeliverContent(data.customerId)"/>
+                                    <Button label="Deliver" icon="pi pi-truck" size="small" severity="help" @click="showDeliverContent(data.customerId)"/>
                                 </span>
                             </template>
                         </Column>
