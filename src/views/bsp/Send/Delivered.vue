@@ -39,7 +39,6 @@
     onBeforeMount( async ()=>{
         await userService.me().then((res) => (whoaim.nameEmploye = res.data.nameEmploye));
         await sendService.customerToDelivery(customerId.value).then((res)=>(customerDeliverData.value = res.data));
-        initCamera()
     });
     
     function convertImage(e){
@@ -59,10 +58,12 @@
     
     const saveSign = (t) => {
         formDelivered.signPickUp=signaturePickUp.value.save(t)
+        initCamera()
     }
     const clearSign = () => {
         signaturePickUp.value.clear();
         formDelivered.signPickUp= null;
+        stopCamera();
     }
     
     var width = 350;
@@ -119,7 +120,15 @@
             showCanvas.value = true;
             formDelivered.photoPickUp = canvas.toDataURL("image/jpeg",1.0);
         }
-        console.log(formDelivered);
+    }
+    
+    function stopCamera(){
+        video = document.querySelector('video');
+        mediaStream = video.srcObject;
+        tracks = mediaStream.getTracks();
+        tracks.forEach(track => track.stop());
+        video.srcObject = null
+        video = null
     }
     
     function clearPackToDeliver(pos){
@@ -138,7 +147,8 @@
             formDelivered.pickUpId = customerDeliverData.value.idPickUp;
             const deliverSave = await sendService.saveDelivered(formDelivered);
             msgService.successMessageSimple(deliverSave.message,"Got it!");
-            router.push({name:"senddeliver"});
+            stopCamera();
+            //router.push({name:"senddeliver"});
         } catch (e) {
             msgService.errorMessage(e)        
         }

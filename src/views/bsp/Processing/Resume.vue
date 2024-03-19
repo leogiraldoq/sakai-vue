@@ -47,7 +47,9 @@
                 datesSend.from = moment(datesFilter.value[0]).format('YYYY-MM-DD');
                 datesSend.to = moment(datesFilter.value[1]).format('YYYY-MM-DD');
                 const resumeByDate = await processService.listPerUserDate(datesSend);
-                if(resumeByDate.data.length>0){
+                console.log(resumeByDate);
+                console.log(resumeByDate.data);
+                if(resumeByDate.data.resume.length>0){
                     processList.value = resumeByDate.data;
                     Object.assign(datesSend,{
                         from: null,

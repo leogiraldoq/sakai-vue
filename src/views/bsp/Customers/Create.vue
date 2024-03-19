@@ -32,8 +32,10 @@
             {
                 name: null,
                 address: null,
+                zipAddress: null,
                 city: null,
                 final_destination: null,
+                zipFinal: null,
                 contacts:[
                     {
                         contact_name: null,
@@ -86,16 +88,18 @@
     
     function addFormBoutique(){
         formCreateCustomer.boutiques.push({
-            name:'',
-            address: '',
-            city:'',
-            final_destination:'',
+            name: null,
+            address: null,
+            zipAddress: null,
+            city: null,
+            final_destination: null,
+            zipFinal: null,
             contacts:[
                 {
-                    contact_name:'',
-                    phone: '',
-                    email:'',
-                    reemail:''
+                    contact_name: null,
+                    phone: null,
+                    email: null,
+                    reemail: null
                 }
             ]   
         });
@@ -109,6 +113,7 @@
     
     function sameAddress(numBoutique){
         formCreateCustomer.boutiques[numBoutique].final_destination = formCreateCustomer.boutiques[numBoutique].address;
+        formCreateCustomer.boutiques[numBoutique].zipFinal = formCreateCustomer.boutiques[numBoutique].zipAddress;
     }
     
     function sameGeneralContact(numBoutique,numContact){
@@ -127,10 +132,10 @@
     
     function addFormBoutiqueContact(cContact){
         formCreateCustomer.boutiques[cContact].contacts.push({
-            contact_name:'',
-            phone: '',
-            email:'',
-            reemail:''
+            contact_name: null,
+            phone: null,
+            email: null,
+            reemail: null
         });
     }
     
@@ -147,52 +152,62 @@
             let customerCreate = await customerservice.create(formCreateCustomer);
             await messageService.successMessage(router,customerCreate.message,'customers',"Create other customert","Go to customer list");
             Object.assign(formCreateCustomer,{
-                name: '',
+                name: null,
                 pickUpCompanyId: null,
-                upsNumberAccount:'',
-                boutiques: [
-                    {
-                        name:'',
-                        address:'',
-                        city:'',
-                        final_destination:'',
-                        contacts:[
-                            {
-                                contact_name:'',
-                                phone: '',
-                                email:'',
-                                reemail:''
-                            }
-                        ]
-                    }
-                ]  
+                upsNumberAccount: null,
+                g_contact_name: null,
+                g_phone: null,
+                g_email: null,
+                g_reemail: null,
+                boutiques: [{
+                    name: null,
+                    address: null,
+                    zipAddress: null,
+                    city: null,
+                    final_destination: null,
+                    zipFinal: null,
+                    contacts:[{
+                        contact_name: null,
+                        phone: null,
+                        email: null,
+                        reemail: null
+
+                    }]
+                }]
             });
         }catch(e){
             messageService.errorMessage(e);
         }
     }
     
+    
+    function verifyMailClient(cB,cC){
+        if(formCreateCustomer.boutiques[cB].contacts[cC].email !== formCreateCustomer.boutiques[cB].contacts[cC].reemail){
+            messageService.errorMessageSimple("The email contact #"+(cC+1)+"for the boutique #"+(cB+1)+" is not the same, that you enter in email field");
+        }
+    }
 </script>
 <template>
     <div class="grid">
         <div class="col-12">
             <Card>
-                <template #title>Create Customers, Boutiques and Contacts</template>
+                <template #title>Register New Customers, Boutiques and Contacts</template>
             </Card>
         </div>
-        <div class="col-12 md:col-6">
+        <div class="col-12 md:col-4">
             <Card>
             <template #title>Customer General Information</template>
             <template #content>
                 <div class="p-fluid formgrid grid">
                     <div class="field col-12">
-                        <label for="inpCustomerName" :class="{'p-error': valCosCreate$.name.$error}">Name:</label>
+                        <label for="inpCustomerName" :class="{'p-error': valCosCreate$.name.$error}">Customer Name:</label>
                         <InputText 
                             id="inpCustomerName" 
                             type="text" 
                             v-model="formCreateCustomer.name" 
                             aria-describedby="formCreateCustomer-help" 
                             :class="{'p-invalid': valCosCreate$.name.$error}"
+                            v-uppercase
                         />
                         <small id="formCreateCustomer-help" class="p-error" v-if="valCosCreate$.name.$error">{{ valCosCreate$.name.$errors[0].$message }}</small>
                     </div>
@@ -209,6 +224,7 @@
                             aria-describedby="dpdCustomerPickUpCompany-help"
                             @change="onChangeVerify()"
                             :class="{'p-invalid': valCosCreate$.pickUpCompanyId.$error}"
+                            v-uppercase
                         />
                         <small id="dpdCustomerPickUpCompany-help" class="p-error" v-if="valCosCreate$.pickUpCompanyId.$error">{{ valCosCreate$.pickUpCompanyId.$errors[0].$message }}</small>
                     </div>
@@ -219,6 +235,7 @@
                             v-model="formCreateCustomer.upsNumberAccount" 
                             aria-describedby="inpCustomerUpsAccount-help" 
                             :class="{'p-invalid': valCosCreate$.upsNumberAccount.$error}"
+                            v-uppercase
                         />
                         <small id="inpCustomerUpsAccount-help" class="p-error" v-if="valCosCreate$.upsNumberAccount.$error">{{ valCosCreate$.upsNumberAccount.$errors[0].$message }}</small>
                     </div>
@@ -227,38 +244,41 @@
                         <Divider/>
                     </div>
                     <div class="field col-12 md:col-6">
-                        <label for="inpContactName" :class="{'p-error': valCosCreate$.g_contact_name.$error}">Names:</label>
+                        <label for="inpContactName" :class="{'p-error': valCosCreate$.g_contact_name.$error}">Customer Contact Names:</label>
                         <InputText 
                             v-model="formCreateCustomer.g_contact_name"
                             id="inpContactName"
                             aria-describedby="inpContactName-help"
                             :class="{'p-invalid': valCosCreate$.g_contact_name.$error}"
+                            v-uppercase
                         />
                         <small id="inpContactName-help" class="p-error" v-if="valCosCreate$.g_phone.$error">{{ valCosCreate$.g_phone.$errors[0].$message }}</small>
                     </div>
                     <div class="field col-12 md:col-6">
-                        <label for="inpContactPhone">Phone:</label>
+                        <label for="inpContactPhone">Customer Contact Phone:</label>
                         <InputText  
                             v-model="formCreateCustomer.g_phone"
                             id="inpContactPhone"
                             aria-describedby="inpContactPhone-help"
                             :class="{'p-invalid': valCosCreate$.g_phone.$error}"
+                            v-uppercase
                         />
                         <small id="inpContactPhone-help" class="p-error" v-if="valCosCreate$.g_phone.$error">{{ valCosCreate$.g_phone.$errors[0].$message }}</small>
                     </div>
                     <div class="field col-12">
-                        <label for="inpContactEmail" :class="{'p-error': valCosCreate$.g_email.$error}">Email:</label>
+                        <label for="inpContactEmail" :class="{'p-error': valCosCreate$.g_email.$error}">Customer Contact Email:</label>
                         <InputText  
                             type="text" 
                             v-model="formCreateCustomer.g_email"
                             id="inpContactEmail"
                             aria-describedby="inpContactEmail-help"
                             :class="{'p-invalid': valCosCreate$.g_email.$error}"
+                            v-uppercase
                         />
                         <small id="inpContactEmail-help" class="p-error" v-if="valCosCreate$.g_email.$error">{{ valCosCreate$.g_email.$errors[0].$message }}</small>
                     </div>
                     <div class="field col-12">
-                        <label for="inpContactReEmail" :class="{'p-error': valCosCreate$.g_reemail.$error}">Verify the Email:</label>
+                        <label for="inpContactReEmail" :class="{'p-error': valCosCreate$.g_reemail.$error}">Customer Contact verify the Email:</label>
                         <InputText  
                             type="text" 
                             v-model="formCreateCustomer.g_reemail"
@@ -266,6 +286,7 @@
                             aria-describedby="inpContactReEmail-help"
                             :class="{'p-invalid': valCosCreate$.g_reemail.$error}"
                             @paste.prevent
+                            v-uppercase
                         />
                         <small id="inpContactReEmail-help" class="p-error" v-if="valCosCreate$.g_reemail.$error">{{ valCosCreate$.g_reemail.$errors[0].$message }}</small>
                     </div>
@@ -275,7 +296,7 @@
             </template>
             </Card>
         </div>
-        <div class="col-12 md:col-6">
+        <div class="col-12 md:col-8">
             <Card>
                 <template #title>Boutiques</template>
                 <template #subtitle>Add boutiques for the customer</template>
@@ -287,33 +308,49 @@
                             </template>
                             <div class="p-fluid formgrid grid">
                                 <div class="field col-12 md:col-6">
-                                    <label>Name:</label>
+                                    <label>Boutique Name:</label>
                                     <InputText  
                                         type="text" 
                                         v-model="boutique.name"
                                     />
                                 </div>
                                 <div class="field col-12 md:col-6">
-                                    <label for="inpBoutiquecity">City:</label>
-                                    <InputText  
-                                        type="text" 
-                                        v-model="boutique.city"
-                                    />
-                                </div>
-                                <div class="field col-12">
-                                    <label for="inpBoutiqueaddress">Address:</label>
+                                    <label for="inpBoutiqueaddress">Boutique Address:</label>
                                     <InputText  
                                         id=""
                                         type="text" 
                                         v-model="boutique.address"
                                     />                                                
                                 </div>
-                                <div class="field col-12">
-                                    <label>Final destination:</label> <Tag class="mr-2 cursor-pointer" severity="secondary" @click="sameAddress(cB)">Same address</Tag>
+                                <div class="field col-12 md:col-6">
+                                    <label for="inpBoutiquecity">Boutique City:</label>
+                                    <InputText  
+                                        type="text" 
+                                        v-model="boutique.city"
+                                    />
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    <label for="inpBoutiqueaddress">Boutique Address Zip:</label>
+                                    <InputText  
+                                        id=""
+                                        type="text" 
+                                        v-model="boutique.zipAddress"
+                                    />                                                
+                                </div>
+                                <div class="field col-8">
+                                    <label>Boutique Final destination:</label> <Tag class="mr-2 cursor-pointer" severity="secondary" @click="sameAddress(cB)">Same address and zip</Tag>
                                     <InputText  
                                         id=""
                                         type="text" 
                                         v-model="boutique.final_destination"
+                                    />                                                
+                                </div>
+                                <div class="field col-12 md:col-4">
+                                    <label>Boutique Final destination Zip:</label>
+                                    <InputText  
+                                        id=""
+                                        type="text" 
+                                        v-model="boutique.zipFinal"
                                     />                                                
                                 </div>
 
@@ -333,32 +370,33 @@
                                                     <Tag class="mr-2 cursor-pointer" severity="secondary" @click="sameGeneralContact(cB,cC)">Same general contact</Tag></br>
                                                     <div class="p-fluid formgrid grid">
                                                         <div class="field col-12 md:col-6">
-                                                            <label>Names:</label>
+                                                            <label>Contact Names:</label>
                                                             <InputText  
                                                                 type="text" 
                                                                 v-model="contact.contact_name"
                                                             />
                                                         </div>
                                                         <div class="field col-12 md:col-6">
-                                                            <label for="inpBoutiqueContactPhone">Phone:</label>
+                                                            <label for="inpBoutiqueContactPhone">Contact Phone:</label>
                                                             <InputText  
                                                                 type="text" 
                                                                 v-model="contact.phone"
                                                             />
                                                         </div>
                                                         <div class="field col-12">
-                                                            <label for="inpBoutiqueContactEmail">Email:</label>
+                                                            <label for="inpBoutiqueContactEmail">Contact Email:</label>
                                                             <InputText  
                                                                 type="text" 
                                                                 v-model="contact.email"
                                                             />
                                                         </div>
                                                         <div class="field col-12">
-                                                            <label for="inpBoutiqueContactReEmail">Verify the Email:</label>
+                                                            <label for="inpBoutiqueContactReEmail">Contact Verify the Email:</label>
                                                             <InputText  
                                                                 type="text" 
                                                                 v-model="contact.reemail"
                                                                 @paste.prevent
+                                                                @change="verifyMailClient(cB,cC)"
                                                             />
                                                         </div>
 

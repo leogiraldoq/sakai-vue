@@ -42,9 +42,18 @@ const router = createRouter({
                     }
                 },
                 {
-                    path: '/bsp/profiles-modules/create',
+                    path: '/bsp/profiles-modules/create/',
                     name: 'profilesmodulescreate',
                     component: () => import('@/views/bsp/ProfileAndModule/Create.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/profiles-modules/update/:id',
+                    name: 'profiles-module-update',
+                    component: () => import('@/views/bsp/ProfileAndModule/Create.vue'),
+                    props:true,
                     meta:{
                         isAuth:true
                     }
@@ -199,6 +208,38 @@ const router = createRouter({
                     name: 'send-deliver-action',
                     component: () => import('@/views/bsp/Send/Delivered.vue'),
                     props:true,
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/tracking',
+                    name: 'tracking',
+                    component: () => import('@/views/bsp/Traking/Index.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/tracking/bill',
+                    name: 'tracking-bill',
+                    component: () => import('@/views/bsp/Traking/Billing.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/tracking/bill/process/details',
+                    name: 'tracking-bill-process-details',
+                    component: () => import('@/views/bsp/Traking/BillingProcessing.vue'),
+                    meta:{
+                        isAuth:true
+                    }
+                },
+                {
+                    path: '/bsp/tracking/bill/employees/details',
+                    name: 'tracking-bill-employees-details',
+                    component: () => import('@/views/bsp/Traking/BillingEmployees.vue'),
                     meta:{
                         isAuth:true
                     }

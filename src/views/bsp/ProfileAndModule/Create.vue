@@ -4,18 +4,50 @@
     import { required, minLength, maxLength, email } from '@vuelidate/validators';
     import ProfilesModulesService from '@/service/ProfilesModulesService';
     import MessageService from '@/service/MessageService';
-    import { useRouter } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import { Vue3JsonEditor } from 'vue3-json-editor'
     import MenuAdmin from '@/assets/json/MenuAdmin';
     import MenuBsp from '@/assets/json/MenuBsp';
 
+    const route = useRoute();
     const router = useRouter();
     const profilemodulesservice = new ProfilesModulesService();
     const messageservice = new MessageService();
-
-    onMounted( async () =>{
-        await getModulesOptions();
+    const idProfile = ref(route.params.id);
+    const showCreate = ref(true)
+    const formModuleCreate = reactive({
+        module_name: '',
+        description: null,
     });
+    const textTittle = ref("Create");
+    const formProfileCreate = reactive({
+        id_profile: null,
+        name: null,
+        description: null,
+        menuBsp: MenuBsp,
+        menuAdmin: MenuAdmin,
+        modulesPermissions: [
+        ]
+    });
+    const rulesProfileCreate = computed(()=>({
+        name: { required, minLength: minLength(4), maxLength: maxLength(50) },
+        description: { required, minLength: minLength(10), maxLength: maxLength(250) },
+    }));
+    const vProfile$ = useVuelidate(rulesProfileCreate,formProfileCreate);
+    
+    onMounted( async () =>{
+        if(idProfile.value){
+            showCreate.value = false
+            textTittle.value = "Update";
+            await profilemodulesservice.getProfileModulesUpdate(idProfile.value).then((res) => {
+                Object.assign(formProfileCreate,res.data);
+            });
+        }else{
+            await getModulesOptions();
+        }
+        
+    });
+
     
     async function getModulesOptions(){
         await profilemodulesservice.getAllModules().then((res) => {
@@ -32,15 +64,12 @@
         });
     }
     
-    const formModuleCreate = reactive({
-        module_name: '',
-        description: null,
-    });
     const rulesModuleCreate = computed(() => ({
         module_name: { required, minLength: minLength(4), maxLength: maxLength(50) },
         description: { minLength: minLength(10), maxLength: maxLength(250) },
     }));
     const vModule$ = useVuelidate(rulesModuleCreate,formModuleCreate);
+    
     async function createNewModule(){    
         try {
             const validationModule = await vModule$.value.$validate();
@@ -67,19 +96,6 @@
 
     }
     
-    const formProfileCreate = reactive({
-        name: null,
-        description: null,
-        menuBsp: MenuBsp,
-        menuAdmin: MenuAdmin,
-        modulesPermissions: [
-        ]
-    });
-    const rulesProfileCreate = computed(()=>({
-        name: { required, minLength: minLength(4), maxLength: maxLength(50) },
-        description: { required, minLength: minLength(10), maxLength: maxLength(250) },
-    }));
-    const vProfile$ = useVuelidate(rulesProfileCreate,formProfileCreate);
     async function createNewProfile(){
         try {
             const validateProfile = vProfile$.value.$validate();
@@ -102,7 +118,6 @@
             console.log(e) 
             messageservice.errorMessage(e);
         }
-
     }
     
     const showMenuAdmin = ref(false);
@@ -114,8 +129,38 @@
         formProfileCreate.menuAdmin = value
     }
     
+    function bringOriginalMenuBsp(){
+        formProfileCreate.menuBsp = MenuBsp
+    }
+    
+    function bringOriginalMenuAdmin(){
+        formProfileCreate.menuAdmin = MenuAdmin
+    }
+    
+    async function updateProfile(){
+        try {
+            const validateProfile = vProfile$.value.$validate();
+            if(!validateProfile){
+                return;
+            }
+            let newProfile = await profilemodulesservice.updateProfile(formProfileCreate);
+            await messageservice.successMessageSimple(newProfile.message,"OK");
+            Object.assign(formProfileCreate,{
+                name: null,
+                description: null,
+                menuBsp: JSON.stringify(MenuBsp),
+                menuAdmin: JSON.stringify(MenuAdmin),
+                modulesPermissions: [
+                ]
+            });
+            router.push({
+                name:'profilesmodules',
+            });
+        } catch (e) { 
+            messageservice.errorMessage(e);
+        }
+    }
 </script>
-
 
 <template>
     <div class="grid">
@@ -156,7 +201,7 @@
         </div>
         <div class="col-12 md:col-8">
             <Card>
-                <template #title>Create profile</template>
+                <template #title>{{ textTittle }} profile</template>
                 <template #content>
                     <form ref="formProfilesCreate" class="p-fluid formgrid grid">
                         <div class="field col-12">
@@ -220,14 +265,21 @@
                     </div>
                 </template>
                 <template #footer>
-                    <Button type="submit" label="Create profile" class="w-full p-3 text-l" @click.prevent="createNewProfile()"></Button>         
+                    <template v-if="showCreate">
+                        <Button type="submit" severity="success" icon="pi pi-save" label="Create profile" class="w-full p-3 text-l" @click.prevent="createNewProfile()" ></Button>         
+                    </template>
+                    <template v-else=>
+                        <Button type="submit" severity="info" icon="pi pi-pencil" label="Update profile" class="w-full p-3 text-l" @click.prevent="updateProfile()" ></Button>         
+                    </template>
+                        
                 </template>
             </Card>
         </div>
         
         <Sidebar v-model:visible="showMenuBsp" position="left" class="w-full md:w-30rem lg:w-40rem">
             <template #header>
-                <h5>Menu Blue star to profile <b>{{ formProfileCreate.name }}</b></h5>
+                <h5 class="text-left">Menu Blue star to profile <b>{{ formProfileCreate.name }}</b></h5>
+                <Tag class="mr-2 cursor-pointer" severity="secondary" @click="bringOriginalMenuBsp()">Bring all the menu</Tag>
             </template>
             <Vue3JsonEditor
                 v-model="formProfileCreate.menuBsp"
@@ -240,6 +292,7 @@
         <Sidebar v-model:visible="showMenuAdmin" position="left" class="w-full md:w-30rem lg:w-40rem">
             <template #header>
                 <h5>Menu Administrator to profile <b>{{ formProfileCreate.name }}</b></h5>
+                <Tag class="mr-2 cursor-pointer" severity="secondary" @click="bringOriginalMenuAdmin()">Bring all the menu</Tag>
             </template>
             <Vue3JsonEditor
                 v-model="formProfileCreate.menuAdmin"

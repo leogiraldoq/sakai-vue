@@ -68,11 +68,11 @@
     const formProduct = reactive({
        name: null 
     });
-    
     const rulesFormProduct = computed(() => ({
         name: {required,minLength: minLength(3), maxLength: maxLength(100)}
     }))
     const vProdCreate$ = useVuelidate(rulesFormProduct,formProduct);
+    
     async function createProduct(){
         try {
             const validationProductCreate = await vProdCreate$.value.$validate();
@@ -84,13 +84,14 @@
             productsOptions.value.push(productCreate.data);
             vProdCreate$.value.$reset();
         } catch (e) {
-            console.log(e)
             messageService.errorMessage(e);        
         }
 
     }
     
+    function bringUpdateData(box){
         
+    }
     
 </script>
 <template>
@@ -113,13 +114,18 @@
                             </template>                                
                         </Column>
                         <Column header="Actions">
-                        <template #body="{data}">
-                            <span class="p-buttonset">
-                                <Button label="Update" size="small" severity="warning" :value="data"/>
-                                <Button label="Delete" size="small" severity="danger" :value="data.id_box"/>
-                            </span>
-                        </template>
-                    </Column>
+                            <template #body="{data}">
+                                <span class="p-buttonset">
+                                    <Button label="Update" icon="pi pi-pencil" severity="warning" size="small" outlined @click="bringUpdateData(data)"/>
+                                    <template v-if='data.active == 1'>
+                                        <Button label="Delete" icon="pi pi-trash" severity="danger" size="small" outlined @click="statusShop(data)"/>
+                                    </template>
+                                    <template v-else>
+                                        <Button label="Active" icon="pi pi-check" severity="success" size="small" outlined @click="statusShop(data)"/>
+                                    </template>
+                                </span>
+                            </template>
+                        </Column>
                     </DataTable>
                 </template>
             </Card>

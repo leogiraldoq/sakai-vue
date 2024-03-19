@@ -63,7 +63,6 @@
             });
 
             window.Echo.channel('qr.pack.'+whoaim.value.id_user).listen('Packing', (event) => {
-                console.log(JSON.parse(event.data));
                 showResult(JSON.parse(event.data));
             });    
         });
@@ -123,7 +122,6 @@
                 msgService.successMessageSimple(resultQr.message+": "+qrReaderBrodcast.value.names,"Got it!");
             }
         } catch (e) {
-            console.log(e)
             msgService.errorMessage(e)
         }
     }
@@ -132,7 +130,6 @@
         if(result){
             if(result.qualityDate !== null){
                 if(qrRead.length > 0 ){
-                    console.log(result.process.length)
                     if(result.prepare.length == 0){
                         if(result.customerId == qrRead[0].customerId && result.boutiqueId == qrRead[0].boutiqueId){
                             if( existQr(result.id_receive_details) == 0 ){
@@ -167,7 +164,6 @@
         }else{
             msgService.errorMessageSimple("The Qr that you read its wrong","Got it!");
         }
-        console.log(qrRead)
     }
     
     function existStore(storeId){

@@ -7,27 +7,30 @@
     import MessageService from '@/service/MessageService';    
 
     const shipperService = new ShippersService();
-    
+    const messageService = new MessageService();
     const shopList = ref(null);
     
     onMounted(async()=>{
       await shipperService.getAll().then((res)=>(shopList.value = res.data));
-      console.log(shopList.value);
     });
     
     const loadingCreate = ref(false);
     const newShop = reactive({
-        name: '',
-        contactName: '',
-        contactNumber: '',
-        email: ''
+        id: null,
+        name: null,
+        contactName: null,
+        contactNumber: null,
+        email: null
     });
     const rulesNewShop = computed(()=>({
        name: {required,minLength:minLength(2),maxLength:maxLength(250)},
     }));
+    
     const vNewShop$ = useVuelidate(rulesNewShop,newShop);
+    const actionCreate = ref(true);
+    const actionUpdate = ref(false);
+    const listPos =ref(0);
     async function createShop(){
-        const messageService = new MessageService();
         try {
             loadingCreate.value = true;
             const validation = await vNewShop$.value.$validate();
@@ -45,9 +48,64 @@
                 email: ''
             });
             vNewShop$.value.$reset();
-            loadingCreate.value = false;
         } catch (e) {
-            loadingCreate.value = false;
+            messageService.errorMessage(e);        
+        }
+    }
+    
+    function bringUpdateData(store){
+        listPos.value = shopList.value.indexOf(store);
+        newShop.id = store.id_shipper;
+        newShop.name = store.name;
+        newShop.contactName = store.contact_name;
+        newShop.contactNumber = store.contact_number;
+        newShop.email = store.email
+        actionCreate.value = false;
+        actionUpdate.value = true;
+    }
+    
+    async function updateShop(){
+        try {
+            const validation = await vNewShop$.value.$validate();
+            if (!validation){
+                loadingCreate.value = false;
+                return;
+            }
+            let shopUpdate = await shipperService.update(newShop);
+            shopList.value[listPos.value] = shopUpdate.data
+            await messageService.successMessageSimple(shopUpdate.message,"Ok!");
+            Object.assign(newShop,{
+                id: null,
+                name: null,
+                contactName: null,
+                contactNumber: null,
+                email: null
+            });
+            vNewShop$.value.$reset();
+            actionCreate.value = true;
+            actionUpdate.value = false;
+            listPos.value = 0;
+        } catch (e) {
+            messageService.errorMessage(e);        
+        }
+    }
+    
+    async function statusShop(store){
+        try {
+            listPos.value = shopList.value.indexOf(store);
+            let shopUpdate = await shipperService.delete(store.id_shipper,(store.active == 0 ? 1 : 0));
+            shopList.value[listPos.value] = shopUpdate.data
+            await messageService.successMessageSimple(shopUpdate.message,"Ok!");
+            Object.assign(newShop,{
+                id: null,
+                name: null,
+                contactName: null,
+                contactNumber: null,
+                email: null
+            });
+            vNewShop$.value.$reset();
+            listPos.value = 0;
+        } catch (e) {
             messageService.errorMessage(e);        
         }
     }
@@ -77,6 +135,19 @@
                                 <slot v-if='data.active == 0'>
                                     <i class="pi pi-times-circle text-red-900"></i>
                                 </slot>
+                            </template>
+                        </Column>
+                        <Column header="Actions">
+                            <template #body="{data}">
+                                <span class="p-buttonset">
+                                    <Button label="Update" icon="pi pi-pencil" severity="warning" size="small" outlined @click="bringUpdateData(data)"/>
+                                    <template v-if='data.active == 1'>
+                                        <Button label="Delete" icon="pi pi-trash" severity="danger" size="small" outlined @click="statusShop(data)"/>
+                                    </template>
+                                    <template v-else>
+                                        <Button label="Active" icon="pi pi-check" severity="success" size="small" outlined @click="statusShop(data)"/>
+                                    </template>
+                                </span>
                             </template>
                         </Column>
                     </DataTable>
@@ -128,7 +199,8 @@
                     </form>
                 </template>
                 <template #footer>
-                    <Button icon="pi pi-save" label="Create shop" @click="createShop()" severity="success" :loading="loadingCreate" class="w-full" />
+                    <Button icon="pi pi-save" label="Create store" @click="createShop()" severity="success" class="w-full" v-show="actionCreate"/>
+                    <Button icon="pi pi-pencil" label="Update store" @click="updateShop()" severity="info" class="w-full" v-show="actionUpdate"/>
                 </template>
             </Card>
         </div>

@@ -39,5 +39,13 @@
             { "label": "Prepare", "icon": "pi pi-fw pi-box", "to": "/bsp/send/create"},
             { "label": "Deliver", "icon": "pi pi-fw pi-gift", "to": "/bsp/send/deliver"}
         ]
+    },
+    {
+        "label": "Tracking",
+        "icon": "pi pi-fw pi-chart-pie",
+        "items": [
+            { "label": "Track", "icon": "pi pi-fw pi-chart-line", "to": "/bsp/tracking"},
+            { "label": "Billing", "icon": "pi pi-fw pi-dollar", "to": "/bsp/tracking/bill"}
+        ]
     }
 ]

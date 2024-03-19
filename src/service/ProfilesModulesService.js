@@ -80,5 +80,36 @@ export default class ProfilesModulesService{
         }
         throw resMenu;
     }
+    
+    async getProfileModulesUpdate(idProfile){
+        const resProfile = await fetch(import.meta.env.VITE_API_URL + '/profile/index/'+idProfile,{
+            method: "GET",
+            headers: {
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if(resProfile.ok){
+            return await resProfile.json();
+        }
+        throw resProfile;
+    }
+    
+    async updateProfile(dataProfile){
+        const createProfile = await fetch( import.meta.env.VITE_API_URL + '/profile/update',{
+            method: "POST",
+            headers: {
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify( dataProfile )
+        });
+        if (createProfile.ok){
+            return await createProfile.json();
+        }
+        throw createProfile;
+    }
 }
 

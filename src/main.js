@@ -124,6 +124,20 @@ app.directive('tooltip', Tooltip);
 app.directive('badge', BadgeDirective);
 app.directive('ripple', Ripple);
 app.directive('styleclass', StyleClass);
+/*app.directive("uppercase", {
+    updated(el) {
+        console.log(el.value)
+        const sourceValue = el.getElementsByTagName("input")[0].value
+        const newValue = sourceValue.toUpperCase()
+
+        if (sourceValue !== newValue) {
+            el.getElementsByTagName("input")[0].value = newValue
+            el = el.getElementsByTagName("input")[0]
+            el.dispatchEvent(new Event("input", { bubbles: true }))
+        }
+    }
+});*/
+
 
 app.component('BlockViewer', BlockViewer);
 

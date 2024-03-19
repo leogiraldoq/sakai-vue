@@ -48,4 +48,35 @@ export default class ShippersService{
        }
        throw resProcessOrNot;
    }
+   
+   async update(shop){
+        const resShop = await fetch(import.meta.env.VITE_API_URL+'/shippers/update',{
+            method: 'POST',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(shop)              
+        });
+        if(resShop.ok){
+            return await resShop.json();
+        }
+        throw resShop;
+   }
+   
+   async delete(idShop,status){
+        const resShop = await fetch(import.meta.env.VITE_API_URL+'/shippers/change/'+status+'/'+idShop,{
+            method: 'GET',
+            headers:{
+                'Authorization': 'Bearer '+localStorage.getItem("token"),
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        if(resShop.ok){
+            return await resShop.json();
+        }
+        throw resShop;
+   }
 }
